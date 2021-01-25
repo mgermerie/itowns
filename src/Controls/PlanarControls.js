@@ -501,7 +501,7 @@ class PlanarControls extends THREE.EventDispatcher {
             delta = -event.detail;
         }
 
-        const pointUnderCursor = this.getWorldPointAtScreenXY(mousePosition);
+        const pointUnderCursor = new THREE.Vector3();
         const newPos = new THREE.Vector3();
 
         // Zoom IN
@@ -510,7 +510,10 @@ class PlanarControls extends THREE.EventDispatcher {
             if (this.camera.isOrthographicCamera) {
                 startZoom = this.camera.zoom;
                 endZoom = startZoom * (1 + this.zoomInFactor);
+                pointUnderCursor.copy(this.getWorldPointAtScreenXYAfterZoom(mousePosition));
                 pointUnderCursor.z = this.camera.position.z;
+            } else {
+                pointUnderCursor.copy(this.getWorldPointAtScreenXY(mousePosition));
             }
             // target position
             newPos.lerpVectors(
@@ -531,7 +534,10 @@ class PlanarControls extends THREE.EventDispatcher {
             if (this.camera.isOrthographicCamera) {
                 startZoom = this.camera.zoom;
                 endZoom = startZoom * (1 - this.zoomOutFactor);
+                pointUnderCursor.copy(this.getWorldPointAtScreenXYAfterZoom(mousePosition));
                 pointUnderCursor.z = this.camera.position.z;
+            } else {
+                pointUnderCursor.copy(this.getWorldPointAtScreenXY(mousePosition));
             }
             // target position
             newPos.lerpVectors(
@@ -826,6 +832,26 @@ class PlanarControls extends THREE.EventDispatcher {
                 this.groundLevel,
             );
         }
+    }
+
+    /**
+     * Compute camera's projection matrix after zoom and returns the world point (xyz) under the posXY screen point
+     * (computed from new camera projection matrix). Then, reset camera projection matrix back to its original value.
+     *
+     * @param   {THREE.Vector2} posXY   the mouse position in screen space (unit : pixel)
+     * @returns {THREE.Vector3}
+     * @ignore
+     */
+    getWorldPointAtScreenXYAfterZoom(posXY) {
+        this.camera.zoom = endZoom;
+        this.camera.updateProjectionMatrix();
+
+        const pointUnderCursor = this.getWorldPointAtScreenXY(posXY);
+
+        this.camera.zoom = startZoom;
+        this.camera.updateProjectionMatrix();
+
+        return pointUnderCursor;
     }
 
     /**
