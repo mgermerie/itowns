@@ -501,7 +501,6 @@ class PlanarControls extends THREE.EventDispatcher {
             delta = -event.detail;
         }
 
-        const pointUnderCursor = new THREE.Vector3();
         const newPos = new THREE.Vector3();
 
         // Zoom IN
@@ -510,7 +509,7 @@ class PlanarControls extends THREE.EventDispatcher {
             if (this.camera.isOrthographicCamera) {
                 startZoom = this.camera.zoom;
                 endZoom = startZoom * (1 + this.zoomInFactor);
-                pointUnderCursor.copy(this.getWorldPointAtScreenXYAfterZoom(mousePosition));
+                pointUnderCursor.copy(this.getWorldPointAtScreenXY(mousePosition));
                 pointUnderCursor.z = this.camera.position.z;
             } else {
                 pointUnderCursor.copy(this.getWorldPointAtScreenXY(mousePosition));
@@ -713,19 +712,22 @@ class PlanarControls extends THREE.EventDispatcher {
 
         // the animation alpha, between 0 (start) and 1 (finish)
         const alpha = (travelUseSmooth) ? this.smooth(travelAlpha) : travelAlpha;
-
-        // new position
-        this.camera.position.lerpVectors(
-            travelStartPos,
-            travelEndPos,
-            alpha,
-        );
-
         const zoom = startZoom + alpha * (endZoom - startZoom);
         // new zoom
         if (this.camera.isOrthographicCamera && this.camera.zoom !== zoom) {
             this.camera.zoom = zoom;
-            this.view.camera.matrixProjectionNeedsUpdate = true;
+            this.camera.updateProjectionMatrix();
+
+            // world coord under mouse on begining
+            this.view.viewToNormalizedCoords(mousePosition, vect);
+            this.camera.updateProjectionMatrix();
+            vect.unproject(this.camera);
+
+            // new position
+            this.camera.position.x += pointUnderCursor.x - vect.x;
+            this.camera.position.y += pointUnderCursor.y - vect.y;
+
+            this.camera.updateMatrixWorld(true);
         }
 
         // new rotation
