@@ -119,6 +119,16 @@
             // Request redraw
             view.notifyChange();
 
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'e') {
+                    // let xxx = view.getLayerById('Ortho');
+                    // xxx.delete();
+                    console.log ('Ortho layer removed')
+                    view.removeLayer('wms_imagery');
+                    view.notifyChange;
+                }
+            });
+
             if (view.isDebugMode) {
                 menuGlobe = new GuiTools('menuDiv', view);
                 menuGlobe.addImageryLayersGUI(view.getLayers(function gui(l) { return l.isColorLayer; }));
