@@ -42,6 +42,10 @@ function buildCommand(view, layer, extentsSource, extentsDestination, requester,
 }
 
 export function updateLayeredMaterialNodeImagery(context, layer, node, parent) {
+    // if (layer.id === "wms_imagery") {
+        // eslint-disable-next-line no-debugger
+        // debugger;
+    // }
     const material = node.material;
     if (!parent || !material) {
         return;
@@ -94,6 +98,10 @@ export function updateLayeredMaterialNodeImagery(context, layer, node, parent) {
             return;
         }
     }
+    if (!node.layerUpdateState[layer.id]) {
+        console.log('coucou');
+        return;
+    }
 
     // Node is hidden, no need to update it
     if (!material.visible) {
@@ -139,9 +147,17 @@ export function updateLayeredMaterialNodeImagery(context, layer, node, parent) {
 
     return context.scheduler.execute(command).then(
         (result) => {
+            // console.log(result);
+            // console.log(node);
+            console.log(layer);
+            // console.log(layer.id);
             // TODO: Handle error : result is undefined in provider. throw error
             const pitchs = extentsDestination.map((ext, i) => ext.offsetToParent(result[i].extent, nodeLayer.offsetScales[i]));
             nodeLayer.setTextures(result, pitchs);
+            // if (!node.layerUpdateState[layer.id]) {
+                // eslint-disable-next-line no-debugger
+                // debugger;
+            // }
             node.layerUpdateState[layer.id].success();
         },
         err => handlingError(err, node, layer, targetLevel, context.view));
