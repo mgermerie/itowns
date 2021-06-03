@@ -37,8 +37,8 @@
     //     var layer = new itowns.ElevationLayer(config.id, config);
     //     view.addLayer(layer);
     // }
-    // itowns.Fetcher.json('./layers/JSONLayers/WORLD_DTM.json').then(addElevationLayerFromConfig);
-    // itowns.Fetcher.json('./layers/JSONLayers/IGN_MNT_HIGHRES.json').then(addElevationLayerFromConfig);
+    // // itowns.Fetcher.json('./layers/JSONLayers/WORLD_DTM.json').then(addElevationLayerFromConfig);
+    // // itowns.Fetcher.json('./layers/JSONLayers/IGN_MNT_HIGHRES.json').then(addElevationLayerFromConfig);
 
     itowns.proj4.defs(
         'EPSG:3946',
@@ -67,7 +67,7 @@
         },
         source: wmsImagerySource,
     });
-    // view.addLayer(wmsImageryLayer);
+    view.addLayer(wmsImageryLayer);
     // itowns.ColorLayersOrdering.moveLayerToIndex(view, 'Ortho', 0);
 
     var wmsElevationSource = new itowns.WMSSource({
@@ -93,34 +93,37 @@
         extent: extent,
     });
 
-    function setAltitude(properties) {
-        console.log(properties);
-    }
-
     const style = new itowns.Style({
-        altitude: setAltitude,
-        // fill: {
-        //     color: 'red',
-        //     opacity: 0.5,
-        // },
-        // stroke: {
-        //     color: 'blue',
-        // },
+        fill: {
+            base_altitude: 20,
+            // extrusion_height: 100,
+            color: 'red',
+            opacity: 0.5,
+        },
+        stroke: {
+            color: 'red',
+        },
     });
 
     // const colorLayer = new itowns.ColorLayer('colorJSON', {
     //     source: source,
     //     style: style,
     // });
+    // view.addLayer(colorLayer);
 
-    const geometryLayer = new itowns.GeometryLayer('geometryJSON', {
+    const geometryLayer = new itowns.GeometryLayer('geometryJSON', new itowns.THREE.Group(), {
         source: source,
         update: itowns.FeatureProcessing.update,
         convert: itowns.Feature2Mesh.convert(),
         style: style,
     })
+    view.addLayer(geometryLayer);
 
-    view.addLayer(colorLayer);
+
+    view.addEventListener(itowns.VIEW_EVENTS.INITIALIZED, function () {
+        // eslint-disable-next-line no-console
+        console.info('view initialized');
+    });
 
 </script>
 </body>
