@@ -1,0 +1,127 @@
+<html>
+<head>
+    <title>Itowns - Globe + color layers from vector data</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/example.css">
+    <link rel="stylesheet" type="text/css" href="css/LoadingScreen.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js"></script>
+</head>
+<body>
+<div id="viewerDiv" class="viewer"></div>
+<script src="js/GUI/GuiTools.js"></script>
+<script src="../dist/itowns.js"></script>
+<script src="../dist/debug.js"></script>
+<script src="js/GUI/LoadingScreen.js"></script>
+<script src="js/plugins/FeatureToolTip.js"></script>
+<script type="text/javascript">
+    /* global itowns */
+
+    var viewerDiv = document.getElementById('viewerDiv');
+
+    // var placement = {
+    //     coord: new itowns.Coordinates('EPSG:4326', 4.818, 45.7354),
+    //     range: 3000,
+    // }
+    // var view = new itowns.GlobeView(viewerDiv, placement);
+    //
+    // itowns.Fetcher.json('./layers/JSONLayers/Ortho.json').then(function _(config) {
+    //     config.source = new itowns.WMTSSource(config.source);
+    //     var layer = new itowns.ColorLayer('Ortho', config);
+    //     view.addLayer(layer);
+    //     itowns.ColorLayersOrdering.moveLayerToIndex(view, 'Ortho', 0);
+    // });
+    // function addElevationLayerFromConfig(config) {
+    //     config.source = new itowns.WMTSSource(config.source);
+    //     var layer = new itowns.ElevationLayer(config.id, config);
+    //     view.addLayer(layer);
+    // }
+    // itowns.Fetcher.json('./layers/JSONLayers/WORLD_DTM.json').then(addElevationLayerFromConfig);
+    // itowns.Fetcher.json('./layers/JSONLayers/IGN_MNT_HIGHRES.json').then(addElevationLayerFromConfig);
+
+    itowns.proj4.defs(
+        'EPSG:3946',
+        '+proj=lcc +lat_1=45.25 +lat_2=46.75 +lat_0=46 +lon_0=3 +x_0=1700000 +y_0=5200000 +ellps=GRS80 ' +
+        '+towgs84=0,0,0,0,0,0,0 +units=m +no_defs'
+    );
+    const extent = new itowns.Extent(
+        'EPSG:3946',
+        1837816.94334, 1847692.32501,
+        5170036.4587, 5178412.82698
+    );
+    view = new itowns.PlanarView(viewerDiv, extent, { placement: { heading: 49.6, range: 6200, tilt: 17 } });
+
+    var wmsImagerySource = new itowns.WMSSource({
+        extent: extent,
+        name: 'Ortho2009_vue_ensemble_16cm_CC46',
+        url: 'https://download.data.grandlyon.com/wms/grandlyon',
+        version: '1.3.0',
+        crs: 'EPSG:3946',
+        format: 'image/jpeg',
+    });
+    var wmsImageryLayer = new itowns.ColorLayer('Ortho', {
+        updateStrategy: {
+            type: itowns.STRATEGY_DICHOTOMY,
+            options: {},
+        },
+        source: wmsImagerySource,
+    });
+    // view.addLayer(wmsImageryLayer);
+    // itowns.ColorLayersOrdering.moveLayerToIndex(view, 'Ortho', 0);
+
+    var wmsElevationSource = new itowns.WMSSource({
+        extent: extent,
+        url: 'https://download.data.grandlyon.com/wms/grandlyon',
+        name: 'MNT2012_Altitude_10m_CC46',
+        crs: 'EPSG:3946',
+        width: 256,
+        format: 'image/jpeg',
+    });
+    var wmsElevationLayer = new itowns.ElevationLayer('Elevation', {
+        useColorTextureElevation: true,
+        colorTextureElevationMinZ: 144,
+        colorTextureElevationMaxZ: 622,
+        source: wmsElevationSource,
+    });
+    // view.addLayer(wmsElevationLayer);
+
+    const source = new itowns.FileSource({
+        url: 'out.json',
+        crs: 'EPSG:4326',
+        format: 'application/json',
+        extent: extent,
+    });
+
+    function setAltitude(properties) {
+        console.log(properties);
+    }
+
+    const style = new itowns.Style({
+        altitude: setAltitude,
+        // fill: {
+        //     color: 'red',
+        //     opacity: 0.5,
+        // },
+        // stroke: {
+        //     color: 'blue',
+        // },
+    });
+
+    // const colorLayer = new itowns.ColorLayer('colorJSON', {
+    //     source: source,
+    //     style: style,
+    // });
+
+    const geometryLayer = new itowns.GeometryLayer('geometryJSON', {
+        source: source,
+        update: itowns.FeatureProcessing.update,
+        convert: itowns.Feature2Mesh.convert(),
+        style: style,
+    })
+
+    view.addLayer(colorLayer);
+
+</script>
+</body>
+</html>
