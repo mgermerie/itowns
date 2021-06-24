@@ -225,6 +225,14 @@ section {
     background-color: #fff;
 }
 
+article p {
+    text-align: justify;
+}
+article ul {
+    text-align: justify;
+    max-width: 800px;
+}
+
 .variation {
     display: none
 }
@@ -289,14 +297,35 @@ nav {
     z-index: 2;
 }
 
+nav img {
+    width: 100%;
+    margin-top: 30px;
+}
+
 nav h3 {
-    font-size: 13px;
+    font-size: 20px;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: bold;
     line-height: 24px;
     margin: 40px 0 10px 0;
-    padding: 0;
+    padding: 40px 0 0 0;
+    border-top: 3px solid #4b484f;
+}
+
+nav>h3:first-child {
+    border-top: none;
+}
+
+nav h4 {
+    font-size: 17px;
+    margin: 10px 0 10px 0;
+    padding: 20px 0 0 5px;
+    border-top: 1px solid #e2e2e2;
+}
+
+nav>h3 + h4 {
+    border-top: none;
 }
 
 nav ul {
@@ -323,25 +352,33 @@ nav ul a:hover, nav ul a:active {
 }
 
 nav>ul {
-    padding: 0 10px;
+    padding: 0 5px;
 }
 
 nav>ul li:first-child {
     padding-top: 0;
 }
 
-nav ul li ul {
-    padding-left: 0;
+nav>ul>li:last-child.active {
+    border-bottom: none;
 }
 
-nav>ul>li {
-    border-bottom: 1px solid #e2e2e2;
+nav ul li ul {
+    padding-left: 0;
+    height: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+}
+
+nav>ul>li.active {
     padding: 10px 0 20px 0;
 }
 
 nav>ul>li.active ul {
     border-left: 3px solid #0095dd;
     padding-left: 15px;
+    height: auto;
+    margin-bottom: 10px;
 }
 
 nav>ul>li.active ul li.active a {
@@ -354,8 +391,8 @@ nav>ul>li.active a {
 
 nav>ul>li>a {
     color: #706d77;
-    padding: 20px 0;
-    font-size: 18px;
+    padding: 2px 0;
+    font-size: 13px;
 }
 
 nav ul ul {
@@ -369,10 +406,10 @@ nav ul ul a {
 
 nav ul ul a, nav ul ul a:active {
     font-family: 'bt_mono', monospace;
-    font-size: 14px;
+    font-size: 13px;
     padding-left: 20px;
-    padding-top: 3px;
-    padding-bottom: 9px;
+    padding-top: 2px;
+    padding-bottom: 1px;
 }
 
 nav h2 {
@@ -562,7 +599,9 @@ footer {
     border: 1px solid #ddd;
     border-radius: 3px;
     width: 100%;
+    max-width: none;
     font-size: 14px;
+    overflow-x: auto;
 }
 
 .params .name, .props .name, .name code {
@@ -777,10 +816,13 @@ dl.param-type {
 
 table {
     border-collapse: separate;
-    ;
     display: block;
-    overflow-x: auto;
+    max-width: 800px;
     /*table-layout:fixed;*/
+}
+
+table th img {
+    width: 100%;
 }
 
 table tbody td {
@@ -852,12 +894,25 @@ td table.params, td table.props {
 
 .top-nav-wrapper ul li {
     display: inline-block;
-    padding: 0 10px;
-    vertical-align: top;
+    padding: 0 6px;
+    vertical-align: bottom;
 }
 
 .top-nav-wrapper ul li.active {
     border-bottom: 2px solid rgba(28, 160, 224, 1);
+}
+
+.top-nav-wrapper ul li:first-child {
+    height: 36px;
+    width: 36px;
+}
+
+.top-nav-wrapper ul li:last-child {
+    width: 232px;
+}
+
+.top-nav-wrapper ul li:last-child input {
+    width: 100%;
 }
 
 .search-wrapper {
@@ -950,4 +1005,12 @@ input.search-input:focus {
 .name-container {
   display: flex;
   padding-top: 1em;
+}
+
+.hidden {
+  display: none;
+}
+
+td.last {
+    width: 99%;
 }

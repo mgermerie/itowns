@@ -290,7 +290,39 @@ function attachModuleSymbols(doclets, modules) {
     });
 }
 
-function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
+// ITOWNS CUSTOMIZATION :
+// Sort members according to config navigation property
+function sortMemberNav(items, navigation) {
+    let sortedItems = {};
+
+    for (const section in navigation) {
+        sortedItems[section] = [];
+        navigation[section].forEach((docPage) => {
+            items.forEach((item) => {
+                if (item.longname === docPage || item.longname === 'module:' + docPage) {
+                    sortedItems[section].push(item);
+                }
+            })
+        })
+    }
+
+    return sortedItems
+}
+
+function buildSortedMemberNav(sortedItems, itemHeading, itemsSeen, linktoFn) {
+    var nav = '';
+    var itemsNav = '';
+
+    nav += '<h3>' + itemHeading + '</h3>';
+
+    for (const section in sortedItems) {
+        const items = sortedItems[section];
+        nav += buildMemberNav(items, itemHeading, itemsSeen, linktoFn, section);
+    }
+    return nav;
+}
+
+function buildMemberNav(items, itemHeading, itemsSeen, linktoFn, itemSection) {
     var nav = '';
     var itemsNav = '';
 
@@ -321,7 +353,11 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
         });
 
         if (itemsNav !== '') {
-            nav += '<h3>' + itemHeading + '</h3><ul>' + itemsNav + '</ul>';
+            if (itemSection) {
+                nav += '<h4 class="nav-subsection">' + itemSection + '</h4><ul>' + itemsNav + '</ul>';
+            } else {
+                nav += '<h3>' + itemHeading + '</h3><ul>' + itemsNav + '</ul>';
+            }
         }
     }
 
@@ -329,9 +365,9 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
 }
 
 // TODO: as needed, comment back in later
-// function linktoTutorial(longName, name) {
-//   return tutoriallink(name);
-// }
+function linktoTutorial(longName, name) {
+  return tutoriallink(name);
+}
 
 // function linktoExternal(longName, name) {
 //   return linkto(longName, name.replace(/(^"|"$)/g, ''));
@@ -340,6 +376,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
 /**
  * Create the navigation sidebar.
  * @param {object} members The members that will be used to create the sidebar.
+ * @param {object} opts Options from documentation json configuration file.
  * @param {array<object>} members.classes
  * @param {array<object>} members.externals
  * @param {array<object>} members.globals
@@ -351,15 +388,16 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
  * @param {array<object>} members.interfaces
  * @return {string} The HTML for the navigation sidebar.
  */
-function buildNav(members) {
+function buildNav(members, opts) {
     var nav = '';
     var globalNav = '';
     var seen = {};
-    // var seenTutorials = {};
+    var seenTutorials = {};
 
-    nav += buildMemberNav(members.classes, 'Classes', seen, linkto);
-    nav += buildMemberNav(members.modules, 'Modules', {}, linkto);
+    nav += buildSortedMemberNav(sortMemberNav(members.tutorials, opts.tutorialNavigation), 'Tutorials', seenTutorials, linktoTutorial);
+    nav += buildSortedMemberNav(sortMemberNav(members.classes.concat(members.modules), opts.navigation), 'API', seen, linkto);
     // TODO: as needed, comment back in later
+    // nav += buildMemberNav(members.modules, 'Modules', {}, linkto);
     // nav += buildMemberNav(members.externals, 'Externals', seen, linktoExternal);
     // nav += buildMemberNav(members.events, 'Events', seen, linkto);
     // nav += buildMemberNav(members.namespaces, 'Namespaces', seen, linkto);
@@ -367,21 +405,21 @@ function buildNav(members) {
     // nav += buildMemberNav(members.tutorials, 'Tutorials', seenTutorials, linktoTutorial);
     // nav += buildMemberNav(members.interfaces, 'Interfaces', seen, linkto);
 
-    if (members.globals.length) {
-        members.globals.forEach(function (g) {
-            if (g.kind !== 'typedef' && !hasOwnProp.call(seen, g.longname)) {
-                globalNav += '<li>' + linkto(g.longname, g.name) + '</li>';
-            }
-            seen[g.longname] = true;
-        });
-
-        if (!globalNav) {
-            // turn the heading into a link so you can actually get to the global page
-            nav += '<h3 id="global-nav">' + linkto('global', 'Global') + '</h3>';
-        } else {
-            nav += '<h3 id="global-nav">Global</h3><ul>' + globalNav + '</ul>';
-        }
-    }
+    // if (members.globals.length) {
+    //     members.globals.forEach(function (g) {
+    //         if (g.kind !== 'typedef' && !hasOwnProp.call(seen, g.longname)) {
+    //             globalNav += '<li>' + linkto(g.longname, g.name) + '</li>';
+    //         }
+    //         seen[g.longname] = true;
+    //     });
+    //
+    //     if (!globalNav) {
+    //         // turn the heading into a link so you can actually get to the global page
+    //         nav += '<h3 id="global-nav">' + linkto('global', 'Global') + '</h3>';
+    //     } else {
+    //         nav += '<h3 id="global-nav">Global</h3><ul>' + globalNav + '</ul>';
+    //     }
+    // }
 
     return nav;
 }
@@ -578,7 +616,7 @@ exports.publish = function (taffyData, opts, tutorials) {
     view.outputSourceFiles = outputSourceFiles;
 
     // once for all
-    view.nav = buildNav(members);
+    view.nav = buildNav(members, opts);
     attachModuleSymbols(find({longname: {left: 'module:'}}), members.modules);
 
     // generate the pretty-printed source files first so other pages can link to them

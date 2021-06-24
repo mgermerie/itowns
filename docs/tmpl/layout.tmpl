@@ -13,7 +13,7 @@ var resources = templates.resources;
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>
-      <?js= title ?> - Documentation
+      iTowns documentation
   </title>
 
   <link href="https://www.braintreepayments.com/images/favicon-ccda0b14.png" rel="icon" type="image/png">
@@ -78,7 +78,6 @@ var resources = templates.resources;
         </a>
       </li>
 
-      <?js if (usesSearch) { ?>
       <li>
         <div class="search-wrapper">
           <svg fill="#6D6D6D" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -86,18 +85,15 @@ var resources = templates.resources;
             <path d="M0 0h24v24H0z" fill="none"/>
 
           </svg>
-          <input type="text" placeholder="Search" class="search-input">
+          <input type="text" placeholder="Search" class="search-input" id="filter-input">
         </div>
       </li>
-      <?js } ?>
 
     </ul>
   </div>
 
   <nav>
-    <h3 class="reference-title">
-      <?js= templates.referenceTitle || 'Braintree SDK Client Reference' ?>
-    </h3>
+    <img src=images/itowns_logo.png>
 
     <?js if (resources) { ?>
       <h3>
@@ -130,21 +126,56 @@ var resources = templates.resources;
   <script src="scripts/linenumber.js"></script>
   <script src="scripts/pagelocation.js"></script>
 
-  <?js if (usesSearch) { ?>
   <script>
-    $(function () {
-      window.docsearch({
-        apiKey: '<?js= templates.search.apiKey ?>',
-        indexName: '<?js= templates.search.indexName || "braintree" ?>',
-        inputSelector: '.search-input',
-        debug: false, // Set debug to true if you want to inspect the dropdown
-        algoliaOptions: {
-          hitsPerPage: <?js= templates.search.hitsPerPage || 7 ?>
+    let filterInput = document.getElementById('filter-input');
+    filterInput.oninput = function (event) {
+      updateFilter();
+    }
+
+    let navigation = [];
+    function initNavigation() {
+      let sections = document.getElementsByClassName('nav-subsection');
+      for (let i = 0; i < sections.length; i++) {
+        let section = { dom: sections[i], links: [] };
+
+        let links = sections[i].nextElementSibling.getElementsByTagName('a');
+        for (let j = 0; j < links.length; j++) {
+          section.links.push(links[j]);
         }
-      });
-    });
+
+        navigation.push(section);
+      }
+    }
+
+    function updateFilter() {
+      let regExp = new RegExp(filterInput.value, 'gi');
+      for (let i = 0; i < navigation.length; i++) {
+        let section = navigation[i];
+        let visibleLinks = 0;
+        for (let j = 0; j < section.links.length; j++) {
+          let link = section.links[j];
+          let name = link.innerText;
+          let filterResults = name.match(regExp);
+
+          if (filterResults && filterResults.length > 0) {
+            link.parentElement.classList.remove('hidden');
+            visibleLinks++;
+          } else {
+            link.parentElement.classList.add('hidden');
+          }
+
+          if (visibleLinks > 0) {
+            section.dom.classList.remove('hidden');
+          } else {
+            section.dom.classList.add('hidden');
+          }
+
+        }
+      }
+    }
+
+    initNavigation();
   </script>
-  <?js } ?>
 
 </body>
 </html>
