@@ -2,6 +2,7 @@
     "opts": {
         "recurse": true,
         "destination": "docs/out/",
+        "template": "docs/",
         "tutorials": "docs/tutorials/",
         "navigation": {
             "Base": [
