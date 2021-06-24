@@ -12,7 +12,7 @@ $(document).ready(function () {
     currentSectionNav = $('#' + getCurrentSectionName() + '-nav');
 
     if (currentSectionNav.position()) {
-        $('nav').scrollTop(currentSectionNav.position().top);
+        $('nav').scrollTop(currentSectionNav.position().top - window.innerHeight / 2);
     }
 
     // function to scroll to anchor when clicking an anchor linl
