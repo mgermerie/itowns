@@ -101,8 +101,6 @@ function findLayerInParent(obj) {
 const raycaster = new THREE.Raycaster();
 
 /**
- * @module Picking
- *
  * Implement various picking methods for geometry layers.
  * These methods are not meant to be used directly, see View.pickObjectsAt
  * instead.
@@ -112,6 +110,8 @@ const raycaster = new THREE.Raycaster();
  *   - view coordinates (in pixels) where picking should be done
  *   - radius (in pixels) of the picking circle
  *   - layer: the geometry layer used for picking
+ *
+ * @module Picking
  */
 export default {
     pickTilesAt(view, viewCoords, radius, layer, results = []) {
