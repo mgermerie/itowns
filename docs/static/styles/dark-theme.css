@@ -1,0 +1,228 @@
+@media (prefers-color-scheme: dark) {
+
+    html, body {
+        color: #f3f3f3;
+    }
+
+    body {
+        color: #f3f3f3;
+        background-color: #3e3c42;
+    }
+
+    a, a:active {
+        color: #0095dd;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: #f3f3f3;
+    }
+
+    h1 {
+        color: #b4b7b0;
+    }
+
+    h1 span {
+        color: #666;
+    }
+
+    h1.page-title {
+        border-bottom: 1px dashed #333;
+    }
+
+    h3.reference-title small {
+        color: #0095dd;
+    }
+
+    h3.subsection-title {
+        border-bottom: 1px solid #131313;
+    }
+
+    .container-overview .subsection-title {
+        color: #b2b1ac;
+    }
+
+    tt, code, kbd, samp {
+        background: #2f333a;
+        color: #c1c9d0;
+    }
+
+    .class-description {
+        background-color: rgba(229, 96, 31, 0.1);
+    }
+
+    #main {
+        background-color: #3e3c42;
+    }
+
+    section {
+        background-color: #3e3c42;
+    }
+
+    .signature-attributes {
+        color: #555;
+    }
+
+    .rule {
+        border-top: 1px solid #333;
+    }
+
+    nav {
+        background: #3e3c42;
+    }
+
+    nav h3 {
+        border-top: 3px solid #b4b7b0;
+    }
+
+    nav h4 {
+        border-top: 1px solid #1d1d1d;
+    }
+
+    nav > h3 + h4 {
+        border-top: none;
+    }
+
+    nav ul a:hover, nav ul a:active {
+        color: hsl(200, 100%, 43%);
+    }
+
+    nav > ul > li.active ul {
+        border-left: 3px solid #0095dd;
+    }
+
+    nav > ul > li.active a {
+        color: #0095dd;
+    }
+
+    nav > ul > li > a {
+        color: #8f9288;
+    }
+
+    nav ul ul a {
+        color: #a0a39c;
+    }
+
+    nav > h2 > a {
+        color: hsl(202, 71%, 50%);
+        border-bottom: 1px solid hsl(202, 71%, 50%);
+    }
+
+    footer {
+        background-color: #3e3c42;
+        color: hsl(0, 0%, 72%);
+    }
+
+    .ancestors {
+        color: #666;
+    }
+
+    .ancestors a {
+        color: #666 !important;
+    }
+
+    .important {
+        font-weight: bold;
+        color: #950B02;
+    }
+
+    .type-signature {
+        color: #555;
+    }
+
+    .details {
+        background: #3e3c42;
+    }
+
+    .code-caption {
+        color: #ababab;
+    }
+
+    .prettyprint {
+        font-size: 13px;
+        border: 1px solid #222;
+        border-radius: 3px;
+        overflow: auto;
+        background-color: #040404;
+    }
+
+    .prettyprint code {
+        background-color: #040404;
+        color: #b2b1ac;
+    }
+
+    .prettyprint.linenums li {
+        border-left: 3px #ddd solid
+    }
+
+    .prettyprint.linenums li.selected, .prettyprint.linenums li.selected * {
+        background-color: lightyellow
+    }
+
+    .params, .props {
+        border: 1px solid #222;
+    }
+
+    .params .name, .props .name, .name code {
+        color: #ffffff;
+    }
+
+    .params td {
+        border-top: 1px solid #2f333a;
+    }
+
+    .params thead tr, .props thead tr {
+        background-color: #3e3c42;
+        font-weight: bold;
+    }
+
+    .params .params thead tr, .props .props thead tr {
+        background-color: #3e3c42;
+        font-weight: bold;
+    }
+
+    .disabled {
+        color: #454545
+    }
+
+
+    /* tag source style */
+    .tag-source {
+        border-bottom: 1px solid rgba(28, 160, 224, 0.35);
+    }
+
+    .tag-source:first-child {
+        border-bottom: 1px solid rgba(28, 160, 224, 1);
+    }
+
+    .overlay {
+        background: hsla(0, 0%, 0%, 0.5);
+    }
+
+    table tbody td {
+        border-top: 1px solid #2f333a;
+        border-right: 1px solid #2f333a;
+    }
+
+    @media only screen and (min-width: 320px) and (max-width: 680px) {
+        nav {
+            background: #3e3c42;
+        }
+    }
+
+    .top-nav-wrapper {
+        background-color: #29282b;
+    }
+
+    /* TODO : CHANGE HERE */
+    input.search-input {
+        color: #f3f3f3;
+        border-bottom: 1px solid #c7c7c7;
+    }
+
+
+    /* Smooth outline with box-shadow: */
+    input.search-input:focus {
+        border-bottom: 2px solid rgba(28, 160, 224, 1);
+    }
+
+}
