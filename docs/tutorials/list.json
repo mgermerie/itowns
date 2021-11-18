@@ -5,8 +5,8 @@
     "webgl": {
         "title": "WebGL 1.0/2.0"
     },
-    "Raster-data-Lambert93": {
-        "title": "Lambert conformal conic"
+    "Raster-data-CC46": {
+        "title": "Conformal conic"
     },
     "Raster-data-WGS84": {
         "title": "WGS84 (EPSG:4326)"
@@ -16,5 +16,11 @@
     },
     "Vector-data-on-ground": {
         "title": "Projected on the ground"
+    },
+    "3dTiles-mesh-data": {
+        "title": "mesh data"
+    },
+    "3dTiles-pointCloud-data": {
+        "title": "point cloud data"
     }
 }
