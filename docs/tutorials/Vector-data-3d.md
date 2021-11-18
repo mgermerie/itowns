@@ -1,12 +1,13 @@
 The goal of this tutorial is to give a brief example on how to use iTowns to visualize some vector data as 3D objects.
-These vector data shall represent buildings and be displayed on the `GlobeView` we created in the [WGS84 tutorial]{@tutorial Raster-data-WGS84}.
+These vector data shall represent buildings and be displayed on the `PlanarView` we created in the 
+[CC46 tutorial]{@tutorial Raster-data-CC46}.
 
 ## Preparing the field
 
-To display our buildings, we are going to use the data created in the [WGS84 tutorial]{@tutorial Raster-data-WGS84}. As we are trying to display some buildings,
-let's move closer to the ground to see something and let's give the camera an initial rotation. 
-For this, we need to change the starting position to something more appropriate. We also need to modify the elevation
-layer to a more precise one.
+To display our buildings, we are going to use the data created in the [CC46 tutorial]{@tutorial Raster-data-CC46}. 
+As we are trying to display some buildings, let's move closer to the ground to see something and let's change the camera 
+initial rotation. 
+For this, we need to change the starting position to something more appropriate.
 
 ```html
 <!DOCTYPE html>
@@ -25,67 +26,64 @@ layer to a more precise one.
         <div id="viewerDiv"></div>
         <script src="js/itowns.js"></script>
         <script type="text/javascript">
-            var viewerDiv = document.getElementById('viewerDiv');
-            var placement = {
-                coord: new itowns.Coordinates('EPSG:4326', 4.818, 45.7354),
-                range: 1000,
-                tilt: 20,
+
+            // Retrieve the view container
+            const viewerDiv = document.getElementById('viewerDiv');
+
+            // Define the view geographic extent
+            itowns.proj4.defs(
+                'EPSG:3946',
+                '+proj=lcc +lat_1=45.25 +lat_2=46.75 +lat_0=46 +lon_0=3 +x_0=1700000 +y_0=5200000 +ellps=GRS80 ' +
+                '+towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
+            );
+            const viewExtent = new itowns.Extent(
+                'EPSG:3946',
+                1837816.94334, 1847692.32501,
+                5170036.4587, 5178412.82698,
+            );
+
+            // Define the camera initial placement
+            const placement = {
+                coord: new itowns.Coordinates('EPSG:3946', 1840839, 5172718, 0),
+                tilt: 30,
+                heading: 45,
+                range: 1800,
             };
-            var view = new itowns.GlobeView(viewerDiv, placement);
-            
-            var colorSource = new itowns.WMTSSource({
-                url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
-                crs: 'EPSG:3857',
-                name: 'ORTHOIMAGERY.ORTHOPHOTOS',
-                tileMatrixSet: 'PM',
-                format: 'image/jpeg'
+
+            // Create the planar view
+            const view = new itowns.PlanarView(viewerDiv, viewExtent, {
+                placement: placement,
             });
-            
-            var colorLayer = new itowns.ColorLayer('Ortho', {
-                source: colorSource,
+
+            // Define the source of the ortho-images
+            const sourceOrtho = new itowns.WMSSource({
+                url: 'https://download.data.grandlyon.com/wms/grandlyon',
+                name: 'Ortho2009_vue_ensemble_16cm_CC46',
+                format: 'image/jpeg',
+                crs: 'EPSG:3946',
+                extent: viewExtent,
             });
-            
-            view.addLayer(colorLayer);
-            
-            var elevationSource = new itowns.WMTSSource({
-                url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
-                crs: 'EPSG:4326',
-                name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.HIGHRES',
-                tileMatrixSet: 'WGS84G',
-                format: 'image/x-bil;bits=32',
-                tileMatrixSetLimits: {
-                    11: {
-                        minTileRow: 442,
-                        maxTileRow: 1267,
-                        minTileCol: 1344,
-                        maxTileCol: 2683
-                    },
-                    12: {
-                        minTileRow: 885,
-                        maxTileRow: 2343,
-                        minTileCol: 3978,
-                        maxTileCol: 5126
-                    },
-                    13: {
-                        minTileRow: 1770,
-                        maxTileRow: 4687,
-                        minTileCol: 7957,
-                        maxTileCol: 10253
-                    },
-                    14: {
-                        minTileRow: 3540,
-                        maxTileRow: 9375,
-                        minTileCol: 15914,
-                        maxTileCol: 20507
-                    }
-                }
+            // Create the ortho-images ColorLayer and add it to the view
+            const layerOrtho = new itowns.ColorLayer('Ortho', { source: sourceOrtho });
+            view.addLayer(layerOrtho);
+
+            // Define the source of the dem data
+            const sourceDEM = new itowns.WMSSource({
+                url: 'https://download.data.grandlyon.com/wms/grandlyon',
+                name: 'MNT2018_Altitude_2m',
+                format: 'image/jpeg',
+                crs: 'EPSG:3946',
+                extent: viewExtent,
             });
-            
-            var elevationLayer = new itowns.ElevationLayer('MNT_WORLD', {
-                source: elevationSource,
+            // Create the dem ElevationLayer and add it to the view
+            const layerDEM = new itowns.ElevationLayer('DEM', {
+                source: sourceDEM,
+                useColorTextureElevation: true,
+                colorTextureElevationMinZ: 144,
+                colorTextureElevationMaxZ: 622,
             });
+            view.addLayer(layerDEM);
             
-            view.addLayer(elevationLayer);
         </script>
      </body>
 </html>
@@ -100,7 +98,7 @@ of layer is similar to the other layers. So before declaring the layer, let's
 instantiate the source.
 
 ```js
-var geometrySource = new itowns.WFSSource({
+const buildingsSource = new itowns.WFSSource({
     url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wfs?',
     typeName: 'BDTOPO_BDD_WLD_WGS84G:bati_indifferencie',
     crs: 'EPSG:4326',
@@ -110,15 +108,15 @@ var geometrySource = new itowns.WFSSource({
 With our source instantiated, we can create our `FeatureGeometryLayer`, giving it the usual `id` and `source` parameters :
 
 ```js
-var geometryLayer = new itowns.FeatureGeometryLayer('Buildings', {
-    source: geometrySource,
-    zoom: { min: 14 },
+const buildingsLayer = new itowns.FeatureGeometryLayer('Buildings', {
+    source: buildingsSource,
+    zoom: { min: 4 },
 });
 
-view.addLayer(geometryLayer);
+view.addLayer(buildingsLayer);
 ```
 
-We also added a minimal `zoom` parameter to prevent our data being displayed under a certain 
+We also added a minimal `zoom` parameter to prevent our data from being displayed under a certain 
 zoom level at which we would be too far from the data to distinguish them.
 
 Trying this code will result visually in the following.
@@ -138,27 +136,27 @@ As mentioned in the [fundamentals]{@tutorial Fundamentals} tutorial, we can modi
 The altitude at which polygons are displayed can be modified using the `base_altitude` parameter, which we set as follows :
 
 ```js
-function setAltitude(properties) {
+function setBuildingsAltitude(properties) {
     console.log(properties);
 }
 
-var geometrySource = new itowns.WFSSource({
+const buildingsSource = new itowns.WFSSource({
     url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wfs?',
     typeName: 'BDTOPO_BDD_WLD_WGS84G:bati_indifferencie',
     crs: 'EPSG:4326',
 });
 
-var geometryLayer = new itowns.FeatureGeometryLayer('Buildings', {
-    source: geometrySource,
-    zoom: { min: 14 },
+const buildingsLayer = new itowns.FeatureGeometryLayer('Buildings', {
+    source: buildingsSource,
+    zoom: { min: 4 },
     style: new itowns.Style({
         fill: {
-            base_altitude: setAltitude,
+            base_altitude: setBuildingsAltitude,
         }
     }),
 });
 
-view.addLayer(geometryLayer);
+view.addLayer(buildingsLayer);
 ```
 
 If we take a look using `console.log(properties);` at what we have in the
@@ -185,7 +183,7 @@ The first one corresponds to the altitude of the building roof, and the second o
 We can therefore set the base altitude of our buildings by removing the value of `hauteur` to the value of `z_min` :
 
 ```js
-function setAltitude(properties) {
+function setBuildingsAltitude(properties) {
     return properties.z_min - properties.hauteur;
 }
 ```
@@ -200,32 +198,32 @@ Like the altitude, the volume of buildings can be changed using the `extrusion_h
 parameter of the `Style.fill` property.
 
 ```js
-function setExtrusion(properties) {
+function setBuildingsExtrusion(properties) {
     return properties.hauteur;
 }
 
-var geometrySource = new itowns.WFSSource({
+const buildingsSource = new itowns.WFSSource({
     url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wfs?',
     typeName: 'BDTOPO_BDD_WLD_WGS84G:bati_indifferencie',
     crs: 'EPSG:4326',
 });
 
-var geometryLayer = new itowns.FeatureGeometryLayer('Buildings', {
-    source: geometrySource,
-    zoom: { min: 14 },
+const buildingsLayer = new itowns.FeatureGeometryLayer('Buildings', {
+    source: buildingsSource,
+    zoom: { min: 4 },
     style: new itowns.Style({
         fill: {
-            base_altitude: setAltitude,
-            extrusion_height: setExtrusion,
+            base_altitude: setBuildingsAltitude,
+            extrusion_height: setBuildingsExtrusion,
         }
     }),
 });
 
-view.addLayer(geometryLayer);
+view.addLayer(buildingsLayer);
 ```
 
-The parameter `properties` of the `setExtrusion` method is the same as in
-`setAltitude`. We noticed there is a `hauteur` (`height` in French) property that
+The parameter `properties` of the `setBuildingsExtrusion` method is the same as in
+`setBuildingsAltitude`. We noticed there is a `hauteur` (`height` in French) property that
 we could use to set the height of the building. Moving around with this gives a
 nice view of our buildings :
 
@@ -238,29 +236,28 @@ building being randomly colored at each time. To solve this, as we did before,
 we can add a `color` parameter to the `Style.fill` property.
 
 ```js
-function setColor(properties) {
+function setBuildingsColor(properties) {
     return new itowns.THREE.Color(0xaaaaaa);
 }
 
-var geometrySource = new itowns.WFSSource({
+const buildingsSource = new itowns.WFSSource({
     url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wfs?',
     typeName: 'BDTOPO_BDD_WLD_WGS84G:bati_indifferencie',
     crs: 'EPSG:4326',
 });
 
-var geometryLayer = new itowns.FeatureGeometryLayer('Buildings', {
-    source: geometrySource,
-    zoom: { min: 14 },
+const buildingsLayer = new itowns.FeatureGeometryLayer('Buildings', {
+    source: buildingsSource,
+    zoom: { min: 4 },
     style: new itowns.Style({
         fill: {
-            color: setColor,
-            base_altitude: setAltitude,
-            extrusion_height: setExtrusion,
+            color: setBuildingsColor,
+            base_altitude: setBuildingsAltitude,
+            extrusion_height: setBuildingsExtrusion,
         },
     }),
 });
-
-view.addLayer(geometryLayer);
+view.addLayer(buildingsLayer);
 ```
 
 For each building, a new color is created (using `THREE.Color`), and this results
@@ -268,10 +265,80 @@ in all buildings being colored in a light gray.
 
 ![Extruded and colored buildings on GeometryLayer](images/Vector-data-3d-4.png)
 
+## Position data with no altitude
+
+The buildings data we just displayed had some properties that allowed us to compute buildings base altitude.
+However, if none of these properties are available, we can use iTowns `{@link DEMUtils}` to compute objects base altitude.
+
+For example, let's display some bus lines data :
+
+```js
+const busSource = new itowns.WFSSource({
+    url: 'https://download.data.grandlyon.com/wfs/rdata?',
+    typeName: 'tcl_sytral.tcllignebus',
+    format: 'geojson',
+    crs: 'EPSG:3946',
+    version: '2.0.0',
+});
+
+const busLayer = new itowns.FeatureGeometryLayer('Bus', {
+    source: busSource,
+    zoom: { min: 4 },
+    style: new itowns.Style({
+        stroke: {
+            width: 5,
+        },
+    }),
+})
+view.addLayer(busLayer);
+```
+
+What we do here is similar to what we did with buildings : we define the source of our data (`{@link WFSSource}` here),
+we create a `{@link FeatureGeometryLayer}` to support our data and we add it to our `{@link PlanarView}`.
+
+We can then display data properties the same way we did for the buildings.
+
+```js
+function setBusAltitude(properties) {
+    console.log(properties);
+}
+
+const busLayer = new itowns.FeatureGeometryLayer('Bus', {
+    source: busSource,
+    zoom: { min: 4 },
+    style: new itowns.Style({
+        stroke: {
+            width: 5,
+            base_altitude: setBusAltitude,
+        },
+    }),
+})
+view.addLayer(busLayer);
+```
+
+We can see that no altitude information can be found in properties.
+To set the altitude of our bus data, we are going to use a second optional parameter of the `setBusAltitude` method.
+This parameter gives `{@link Coordinates}` of points along the line.
+With `{@link DEMUtils}`, we can compute the altitude at each of these coordinates :
+
+```js
+function setBusAltitude(properties, coordinates) {
+    if (coordinates) {
+        return (itowns.DEMUtils.getElevationValueAt(view.tileLayer, contour) || 0) + 5
+    }
+    return 5;
+}
+```
+
+We raise bus lines altitude a bit (hence the `+ 5`) so that lines appear above the ground, and not half burried.
+Here is what we obtain :
+
+![bus lines](images/Vector-data-3d-5.png)
+
 ## Result
 
 Congratulations ! By reaching here, we know how to display a simple `FeatureGeometryLayer` 
-on a `GlobeView`, and change the appearance and positioning of this layer. Here is the final code:
+on a `PlanarView`, and change the appearance and positioning of this layer. Here is the final code:
 
 ```html
 <!DOCTYPE html>
@@ -290,99 +357,131 @@ on a `GlobeView`, and change the appearance and positioning of this layer. Here 
         <div id="viewerDiv"></div>
         <script src="js/itowns.js"></script>
         <script type="text/javascript">
-            var viewerDiv = document.getElementById('viewerDiv');
-            var placement = {
-                coord: new itowns.Coordinates('EPSG:4326', 4.818, 45.7354),
-                range: 1E3,
-                tilt: 20,
+
+            // Retrieve the view container
+            const viewerDiv = document.getElementById('viewerDiv');
+
+            // Define the view geographic extent
+            itowns.proj4.defs(
+                'EPSG:3946',
+                '+proj=lcc +lat_1=45.25 +lat_2=46.75 +lat_0=46 +lon_0=3 +x_0=1700000 +y_0=5200000 +ellps=GRS80 ' +
+                '+towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
+            );
+            const viewExtent = new itowns.Extent(
+                'EPSG:3946',
+                1837816.94334, 1847692.32501,
+                5170036.4587, 5178412.82698,
+            );
+
+            // Define the camera initial placement
+            const placement = {
+                coord: new itowns.Coordinates('EPSG:3946', 1840839, 5172718, 0),
+                tilt: 30,
+                heading: 45,
+                range: 1800,
             };
-            var view = new itowns.GlobeView(viewerDiv, placement);
 
-            var colorSource = new itowns.WMTSSource({
-                url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
-                crs: 'EPSG:3857',
-                name: 'ORTHOIMAGERY.ORTHOPHOTOS',
-                tileMatrixSet: 'PM',
-                format: 'image/jpeg'
+            // Create the planar view
+            const view = new itowns.PlanarView(viewerDiv, viewExtent, {
+                placement: placement,
             });
 
-            var colorLayer = new itowns.ColorLayer('Ortho', {
-                source: colorSource,
+            // Define the source of the ortho-images
+            const sourceOrtho = new itowns.WMSSource({
+                url: 'https://download.data.grandlyon.com/wms/grandlyon',
+                name: 'Ortho2009_vue_ensemble_16cm_CC46',
+                format: 'image/jpeg',
+                crs: 'EPSG:3946',
+                extent: viewExtent,
             });
+            // Create the ortho-images ColorLayer and add it to the view
+            const layerOrtho = new itowns.ColorLayer('Ortho', { source: sourceOrtho });
+            view.addLayer(layerOrtho);
 
-            view.addLayer(colorLayer);
-
-            var elevationSource = new itowns.WMTSSource({
-                url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wmts',
-                crs: 'EPSG:4326',
-                name: 'ELEVATION.ELEVATIONGRIDCOVERAGE.HIGHRES',
-                tileMatrixSet: 'WGS84G',
-                format: 'image/x-bil;bits=32',
-                tileMatrixSetLimits: {
-                    11: {
-                        minTileRow: 442,
-                        maxTileRow: 1267,
-                        minTileCol: 1344,
-                        maxTileCol: 2683
-                    },
-                    12: {
-                        minTileRow: 885,
-                        maxTileRow: 2343,
-                        minTileCol: 3978,
-                        maxTileCol: 5126
-                    },
-                    13: {
-                        minTileRow: 1770,
-                        maxTileRow: 4687,
-                        minTileCol: 7957,
-                        maxTileCol: 10253
-                    },
-                    14: {
-                        minTileRow: 3540,
-                        maxTileRow: 9375,
-                        minTileCol: 15914,
-                        maxTileCol: 20507
-                    }
-                }
+            // Define the source of the dem data
+            const sourceDEM = new itowns.WMSSource({
+                url: 'https://download.data.grandlyon.com/wms/grandlyon',
+                name: 'MNT2018_Altitude_2m',
+                format: 'image/jpeg',
+                crs: 'EPSG:3946',
+                extent: viewExtent,
             });
-
-            var elevationLayer = new itowns.ElevationLayer('MNT_WORLD', {
-                source: elevationSource,
+            // Create the dem ElevationLayer and add it to the view
+            const layerDEM = new itowns.ElevationLayer('DEM', {
+                source: sourceDEM,
+                useColorTextureElevation: true,
+                colorTextureElevationMinZ: 144,
+                colorTextureElevationMaxZ: 622,
             });
+            view.addLayer(layerDEM);
 
-            view.addLayer(elevationLayer);
-
-            function setAltitude(properties) {
+            // Define the altitude of buildings
+            function setBuildingsAltitude(properties) {
                 return properties.z_min - properties.hauteur;
             }
 
-            function setExtrusion(properties) {
+            // Define the height of buildings
+            function setBuildingsExtrusion(properties) {
                 return properties.hauteur;
             }
 
-            function setColor(properties) {
+            // Define the color of buildings
+            function setBuildingsColor(properties) {
                 return new itowns.THREE.Color(0xaaaaaa);
             }
 
-            var geometrySource = new itowns.WFSSource({
+            // Define the source of buildings data
+            const buildingsSource = new itowns.WFSSource({
                 url: 'http://wxs.ign.fr/3ht7xcw6f7nciopo16etuqp2/geoportail/wfs?',
                 typeName: 'BDTOPO_BDD_WLD_WGS84G:bati_indifferencie',
                 crs: 'EPSG:4326',
             });
 
-            var geometryLayer = new itowns.FeatureGeometryLayer('Buildings', {
-                source: geometrySource,
-                zoom: { min: 14 },
+            // Create a FeatureGeometryLayer to display buildings data and add it to the view
+            const buildingsLayer = new itowns.FeatureGeometryLayer('Buildings', {
+                source: buildingsSource,
+                zoom: { min: 4 },
                 style: new itowns.Style({
                     fill: {
-                        color: setColor,
-                        base_altitude: setAltitude,
-                        extrusion_height: setExtrusion,
+                        color: setBuildingsColor,
+                        base_altitude: setBuildingsAltitude,
+                        extrusion_height: setBuildingsExtrusion,
                     },
                 }),
             });
+            view.addLayer(buildingsLayer);
 
-            view.addLayer(geometryLayer);
+            // Define the altitude of bus lines
+            function setBusAltitude(properties, contour) {
+                if (contour) {
+                    return (itowns.DEMUtils.getElevationValueAt(view.tileLayer, contour) || 0);
+                } else {
+                    return 0;
+                }
+            }
+
+            // Define the source of bus lines data
+            const busSource = new itowns.WFSSource({
+                url: 'https://download.data.grandlyon.com/wfs/rdata?',
+                typeName: 'tcl_sytral.tcllignebus',
+                format: 'geojson',
+                crs: 'EPSG:3946',
+                version: '2.0.0',
+            });
+
+            // Create a FeatureGeometryLayer to support bus lines data and add it to the view
+            const busLayer = new itowns.FeatureGeometryLayer('Bus', {
+                source: busSource,
+                zoom: { min: 4 },
+                style: new itowns.Style({
+                    stroke: {
+                        width: 5,
+                        base_altitude: setBusAltitude,
+                    },
+                }),
+            })
+            view.addLayer(busLayer);
+            
         </script>
      </body>
 </html>

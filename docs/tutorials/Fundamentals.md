@@ -32,7 +32,7 @@ It is important to aknowledge the following facts regarding original raster data
 
 &rarr;[**`Visit GlobeView tutorial`**]{@tutorial Raster-data-WGS84}
 
-&rarr;[**`Visit PlanarView tutorial`**]{@tutorial Raster-data-Lambert93}
+&rarr;[**`Visit PlanarView tutorial`**]{@tutorial Raster-data-CC46}
 
 ***
 

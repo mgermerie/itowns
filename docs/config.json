@@ -71,7 +71,8 @@
                 "FileSource",
                 "OrientedImageSource",
                 "PotreeSource",
-                "VectorTilesSource"
+                "VectorTilesSource",
+                "C3DTilesSource"
             ],
 
             "Provider": [
@@ -144,7 +145,7 @@
                 "sectionTitle": "Getting started",
                 "sectionId": 0
             },
-            "Raster-data-Lambert93": {
+            "Raster-data-CC46": {
                 "sectionTitle": "Raster visualization",
                 "sectionId": 1
             },
@@ -159,6 +160,14 @@
             "Vector-data-on-ground": {
                 "sectionTitle": "Vector visualization",
                 "sectionId": 2
+            },
+            "3dTiles-mesh-data": {
+                "sectionTitle": "3d-tiles visualization",
+                "sectionId": 3
+            },
+            "3dTiles-pointCloud-data": {
+                "sectionTitle": "3d-tiles visualization",
+                "sectionId": 3
             }
         }
     },
