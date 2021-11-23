@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial : 3d-tiles visualization - point cloud data</title>
+
+    <script src="../scripts/prettify/prettify.js"> </script>
+    <script src="../scripts/prettify/lang-css.js"> </script>
+    <link type="text/css" rel="stylesheet" href="../styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="../styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="../styles/itowns.css">
+</head>
+
+<body>
+
+<section>
+
+<header>
+    <h1>Tutorial : 3d-tiles visualization - point cloud data</h1>
+</header>
+
+<article>
+    <p>The goal of this tutorial is to give an example on how to use iTowns to visualize some point cloud data.
+These data are formated in 3d-tiles, and represent a Lidar acquisition on Lyon city area.
+They can be found <a href="https://github.com/iTowns/iTowns2-sample-data/tree/master/3DTiles/Point_Cloud_2015">here</a>.
+They shall be displayed on a <code><a onclick="window.parent.goTo('api/View/PlanarView.html','api/View/PlanarView')" title="PlanarView">PlanarView</a></code>, as the one created in the <a href="Raster-data-CC46.html">CC46 tutorial</a></p>
+<h2>Preparing the field</h2>
+<p>We are going to use the data displayed in the <a href="Raster-data-CC46.html">CC46 tutorial</a>.
+We just need to change the initial position of the camera, so that our data appears at the center of the screen when
+loading our webpage.
+We are also going to add the labels we displayed in the
+<a href="Vector-data-on-ground.html">vector data projected on ground tutorial</a> tutorial.</p>
+<pre class="prettyprint source lang-html"><code>&lt;!DOCTYPE html>
+&lt;html>
+    &lt;head>
+        &lt;meta charset=&quot;UTF-8&quot;>
+        &lt;title>3d-tiles point cloud data&lt;/title>
+        &lt;style>
+            html { height: 100%; }
+            body { margin: 0; overflow: hidden; height: 100%; }
+            #viewerDiv { margin: auto; height: 100%; width: 100%; padding: 0; }
+            canvas { display: block }
+        &lt;/style>
+    &lt;/head>
+    &lt;body>
+        &lt;div id=&quot;viewerDiv&quot;>&lt;/div>
+        &lt;script src=&quot;js/itowns.js&quot;>&lt;/script>
+        &lt;script type=&quot;text/javascript&quot;>
+
+            // Retrieve the view container
+            const viewerDiv = document.getElementById('viewerDiv');
+
+            // Define the view geographic extent
+            itowns.proj4.defs(
+                'EPSG:3946',
+                '+proj=lcc +lat_1=45.25 +lat_2=46.75 +lat_0=46 +lon_0=3 +x_0=1700000 +y_0=5200000 +ellps=GRS80 ' +
+                '+towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
+            );
+            const viewExtent = new itowns.Extent(
+                'EPSG:3946',
+                1837816.94334, 1847692.32501,
+                5170036.4587, 5178412.82698,
+            );
+
+            // Define the camera initial placement
+            const placement = {
+                coord: new itowns.Coordinates('EPSG:3946', 1842658.54, 5172467.46),
+                tilt: 17,
+                heading: -65,
+                range: 1300,
+            };
+
+            // Create the planar view
+            const view = new itowns.PlanarView(viewerDiv, viewExtent, {
+                placement: placement,
+            });
+
+            // Define the source of the ortho-images
+            const sourceOrtho = new itowns.WMSSource({
+                url: 'https://download.data.grandlyon.com/wms/grandlyon',
+                name: 'Ortho2009_vue_ensemble_16cm_CC46',
+                format: 'image/jpeg',
+                crs: 'EPSG:3946',
+                extent: viewExtent,
+            });
+            // Create the ortho-images ColorLayer and add it to the view
+            const layerOrtho = new itowns.ColorLayer('Ortho', { source: sourceOrtho });
+            view.addLayer(layerOrtho);
+
+            // Define the source of the dem data
+            const sourceDEM = new itowns.WMSSource({
+                url: 'https://download.data.grandlyon.com/wms/grandlyon',
+                name: 'MNT2018_Altitude_2m',
+                format: 'image/jpeg',
+                crs: 'EPSG:3946',
+                extent: viewExtent,
+            });
+            // Create the dem ElevationLayer and add it to the view
+            const layerDEM = new itowns.ElevationLayer('DEM', {
+                source: sourceDEM,
+                useColorTextureElevation: true,
+                colorTextureElevationMinZ: 144,
+                colorTextureElevationMaxZ: 622,
+            });
+            view.addLayer(layerDEM);
+
+            // Define a Source for the city names
+            const citySource = new itowns.WFSSource({
+                url: 'https://wxs.ign.fr/cartovecto/geoportail/wfs?',
+                typeName: 'BDCARTO_BDD_WLD_WGS84G:zone_habitat_mairie',
+                crs: 'EPSG:3946',
+            });
+
+            // Define a Style for the city names
+            const cityStyle = new itowns.Style({
+                text: {
+                    field: '{toponyme}',
+                    color: 'white',
+                    transform: 'uppercase',
+                    size: 15,
+                    haloColor: 'rgba(20, 20, 20, 0.8)',
+                    haloWidth: 3,
+                },
+            });
+
+            // Create a LabelLayer to display city names and add it to the view
+            const cityLayer = new itowns.LabelLayer('cities', {
+                source: citySource,
+                style: cityStyle,
+            });
+            view.addLayer(cityLayer);
+
+        &lt;/script>
+    &lt;/body>
+&lt;/html>
+</code></pre>
+<h2>Display point cloud data</h2>
+<p>As for every data displayed in iTowns, we need to define the source of our point cloud data.
+Our data is in 3d-tiles format, so we can use iTowns <code><a onclick="window.parent.goTo('api/Source/C3DTilesSource.html','api/Source/C3DTilesSource')" title="C3DTilesSource">C3DTilesSource</a></code> :</p>
+<pre class="prettyprint source lang-js"><code>const pointCloudSource = new itowns.C3DTilesSource({
+    url: 'https://raw.githubusercontent.com/iTowns/iTowns2-sample-data/master/3DTiles/Point_Cloud_2015/tileset.json',
+});
+</code></pre>
+<p>It is worth noting that the 3d-tiles data we want to display on a given <code><a onclick="window.parent.goTo('api/View/View.html','api/View/View')" title="View">View</a></code> must be in the same Coordinates
+Reference System (CRS) as the <code><a onclick="window.parent.goTo('api/View/View.html','api/View/View')" title="View">View</a></code>.
+Here, our 3d-tiles data are in <a href="https://epsg.io/3946">RGF93 / CC46</a> projection, just like our <code><a onclick="window.parent.goTo('api/View/PlanarView.html','api/View/PlanarView')" title="PlanarView">PlanarView</a></code>.
+This is the reason why we do not need to specify a <code>crs</code> parameter when instantiating our <code><a onclick="window.parent.goTo('api/Source/C3DTilesSource.html','api/Source/C3DTilesSource')" title="C3DTilesSource">C3DTilesSource</a></code>.</p>
+<p>Now that the source of our data is set, we need to create a <code><a onclick="window.parent.goTo('api/Layer/Layer.html','api/Layer/Layer')" title="Layer">Layer</a></code> which will contain the data.
+To display 3d-tiles data, iTowns comes with a <code><a onclick="window.parent.goTo('api/Layer/C3DTilesLayer.html','api/Layer/C3DTilesLayer')" title="C3DTilesLayer">C3DTilesLayer</a></code>, which we can use as such :</p>
+<pre class="prettyprint source lang-js"><code>const pointCloudLayer = new itowns.C3DTilesLayer('point-cloud', {
+    source: pointCloudSource,
+}, view);
+itowns.View.prototype.addLayer.call(view, pointCloudLayer);
+</code></pre>
+<p>When instantiating a <code><a onclick="window.parent.goTo('api/Layer/C3DTilesLayer.html','api/Layer/C3DTilesLayer')" title="C3DTilesLayer">C3DTilesLayer</a></code>, we need to specify which <code><a onclick="window.parent.goTo('api/View/View.html','api/View/View')" title="View">View</a></code> it is added to.
+We also need to call the generic <code>addLayer</code> method from <code><a onclick="window.parent.goTo('api/View/View.html','api/View/View')" title="View">View</a></code>, and not the specific one from
+<code><a onclick="window.parent.goTo('api/View/PlanarView.html','api/View/PlanarView')" title="PlanarView">PlanarView</a></code>.
+This is because both 3d-tiles data and <code><a onclick="window.parent.goTo('api/View/PlanarView.html','api/View/PlanarView')" title="PlanarView">PlanarView</a></code> have their own spatial subdivision.
+Therefore, 3d-tiles data must not use specific <code><a onclick="window.parent.goTo('api/View/PlanarView.html','api/View/PlanarView')" title="PlanarView">PlanarView</a></code> spatial subdivision.</p>
+<p>To change the level of detail of our point cloud, we can use the <code>sseThreshold</code> parameter of <code><a onclick="window.parent.goTo('api/Layer/C3DTilesLayer.html','api/Layer/C3DTilesLayer')" title="C3DTilesLayer">C3DTilesLayer</a></code>.
+The lower this parameter, the higher the level of detail of the data it displays.
+The default value for this parameter is 16.
+Let's lower it to 1.</p>
+<pre class="prettyprint source lang-js"><code>const pointCloudLayer = new itowns.C3DTilesLayer('point-cloud', {
+    source: pointCloudSource,
+    sseThreshold: 1,
+}, view);
+itowns.View.prototype.addLayer.call(view, pointCloudLayer);
+</code></pre>
+<p>The result is the following :</p>
+<p><img src="images/3dTiles-pointCloud-data-1.png" alt="Simple PlanarView"></p>
+<h2>Result</h2>
+<p>By reaching here, you are able to display some point cloud data in 3d-tiles format.
+The final code to do so is the following :</p>
+<pre class="prettyprint source lang-html"><code>&lt;!DOCTYPE html>
+&lt;html>
+    &lt;head>
+        &lt;meta charset=&quot;UTF-8&quot;>
+        &lt;title>3d-tiles point cloud data&lt;/title>
+        &lt;style>
+            html { height: 100%; }
+            body { margin: 0; overflow: hidden; height: 100%; }
+            #viewerDiv { margin: auto; height: 100%; width: 100%; padding: 0; }
+            canvas { display: block }
+        &lt;/style>
+    &lt;/head>
+    &lt;body>
+        &lt;div id=&quot;viewerDiv&quot;>&lt;/div>
+        &lt;script src=&quot;js/itowns.js&quot;>&lt;/script>
+        &lt;script type=&quot;text/javascript&quot;>
+
+            // Retrieve the view container
+            const viewerDiv = document.getElementById('viewerDiv');
+
+            // Define the view geographic extent
+            itowns.proj4.defs(
+                'EPSG:3946',
+                '+proj=lcc +lat_1=45.25 +lat_2=46.75 +lat_0=46 +lon_0=3 +x_0=1700000 +y_0=5200000 +ellps=GRS80 ' +
+                '+towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
+            );
+            const viewExtent = new itowns.Extent(
+                'EPSG:3946',
+                1837816.94334, 1847692.32501,
+                5170036.4587, 5178412.82698,
+            );
+
+            // Define the camera initial placement
+            const placement = {
+                coord: new itowns.Coordinates('EPSG:3946', 1842658.54, 5172467.46),
+                tilt: 17,
+                heading: -65,
+                range: 1300,
+            };
+
+            // Create the planar view
+            const view = new itowns.PlanarView(viewerDiv, viewExtent, {
+                placement: placement,
+            });
+
+            // Define the source of the ortho-images
+            const sourceOrtho = new itowns.WMSSource({
+                url: 'https://download.data.grandlyon.com/wms/grandlyon',
+                name: 'Ortho2009_vue_ensemble_16cm_CC46',
+                format: 'image/jpeg',
+                crs: 'EPSG:3946',
+                extent: viewExtent,
+            });
+            // Create the ortho-images ColorLayer and add it to the view
+            const layerOrtho = new itowns.ColorLayer('Ortho', { source: sourceOrtho });
+            view.addLayer(layerOrtho);
+
+            // Define the source of the dem data
+            const sourceDEM = new itowns.WMSSource({
+                url: 'https://download.data.grandlyon.com/wms/grandlyon',
+                name: 'MNT2012_Altitude_10m_CC46',
+                format: 'image/jpeg',
+                crs: 'EPSG:3946',
+                extent: viewExtent,
+            });
+            // Create the dem ElevationLayer and add it to the view
+            const layerDEM = new itowns.ElevationLayer('DEM', {
+                source: sourceDEM,
+                useColorTextureElevation: true,
+                colorTextureElevationMinZ: 144,
+                colorTextureElevationMaxZ: 622,
+            });
+            view.addLayer(layerDEM);
+
+            // Define a Source for the city names
+            const citySource = new itowns.WFSSource({
+                url: 'https://wxs.ign.fr/cartovecto/geoportail/wfs?',
+                typeName: 'BDCARTO_BDD_WLD_WGS84G:zone_habitat_mairie',
+                crs: 'EPSG:3946',
+            });
+
+            // Define a Style for the city names
+            const cityStyle = new itowns.Style({
+                text: {
+                    field: '{toponyme}',
+                    color: 'white',
+                    transform: 'uppercase',
+                    size: 15,
+                    haloColor: 'rgba(20, 20, 20, 0.8)',
+                    haloWidth: 3,
+                },
+            });
+
+            // Create a LabelLayer to display city names and add it to the view
+            const cityLayer = new itowns.LabelLayer('cities', {
+                source: citySource,
+                style: cityStyle,
+            });
+            view.addLayer(cityLayer);
+
+            // Define the source of our 3d-tiles data
+            const pointCloudSource = new itowns.C3DTilesSource({
+                url: 'https://raw.githubusercontent.com/iTowns/iTowns2-sample-data/master/3DTiles/Point_Cloud_2015/tileset.json',
+            });
+
+            // Create a layer to display our 3d-tiles data and add it to the view
+            const pointCloudLayer = new itowns.C3DTilesLayer('point-cloud', {
+                source: pointCloudSource,
+                sseThreshold: 1,
+            }, view);
+            itowns.View.prototype.addLayer.call(view, pointCloudLayer);
+
+        &lt;/script>
+    &lt;/body>
+&lt;/html>
+</code></pre>
+</article>
+
+</section>
+
+<script> prettyPrint(); </script>
+<script src="../scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tutorial : Raster visualization - Conformal conic</title>
+
+    <script src="../scripts/prettify/prettify.js"> </script>
+    <script src="../scripts/prettify/lang-css.js"> </script>
+    <link type="text/css" rel="stylesheet" href="../styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="../styles/jsdoc-default.css">
+    <link type="text/css" rel="stylesheet" href="../styles/itowns.css">
+</head>
+
+<body>
+
+<section>
+
+<header>
+    <h1>Tutorial : Raster visualization - Conformal conic</h1>
+</header>
+
+<article>
+    <p>The goal of this tutorial is to give an example on how to use iTowns to visualize data that are in
+<a href="https://epsg.io/3946">RGF93 / CC46</a> Coordinate Reference System (CRS).
+These data are ortho-images and Digital Elevation Models provided by Grand Lyon metropolis.</p>
+<h2>Preparing the webpage</h2>
+<p>The webpage we want to display data on should be structured as follows :</p>
+<pre class="prettyprint source lang-html"><code>&lt;!DOCTYPE html>
+&lt;html>
+    &lt;head>
+        &lt;meta charset=&quot;UTF-8&quot;>
+        &lt;title>Display a planar view with iTowns&lt;/title>
+        &lt;style>
+            html { height: 100%; }
+            body { margin: 0; overflow: hidden; height: 100%; }
+            #viewerDiv { margin: auto; height: 100%; width: 100%; padding: 0; }
+            canvas { display: block }
+        &lt;/style>
+    &lt;/head>
+    &lt;body>
+        &lt;div id=&quot;viewerDiv&quot;>&lt;/div>
+        &lt;script src=&quot;js/itowns.js&quot;>&lt;/script>
+        &lt;script type=&quot;text/javascript&quot;>
+            // Our code goes here
+        &lt;/script>
+    &lt;/body>
+&lt;/html>
+</code></pre>
+<p>What we are doing here is fairly simple :</p>
+<ul>
+<li>we create a container <code>&lt;div id=&quot;viewerDiv&quot;&gt;&lt;/div&gt;</code> that shall serve as a support for the data we wish to display ;</li>
+<li>we define the layout of this container within our webpage ;</li>
+<li>we import iTowns framework (which in our case is located within a <code>js/</code> repository).</li>
+</ul>
+<p>We shall then add javascript to use iTowns to display data within a <code>&lt;script&gt;</code> markup following iTowns import.</p>
+<h2>Create a view</h2>
+<p>As mentioned in <a href="Fundamentals.html">fundamentals tutorial</a>, we need a <code><a onclick="window.parent.goTo('api/View/View.html','api/View/View')" title="View">View</a></code> to support any geographic data
+we wish to display.
+What we want here is to display data in a RGF93 / CC46 projection, which is a conic local projection.
+Therefore, we should use a <code><a onclick="window.parent.goTo('api/View/PlanarView.html','api/View/PlanarView')" title="PlanarView">PlanarView</a></code>, which is a specific type of <code><a onclick="window.parent.goTo('api/View/View.html','api/View/View')" title="View">View</a></code> adapted to local projections.
+We can create it as such :</p>
+<pre class="prettyprint source lang-js"><code>const viewerDiv = document.getElementById('viewerDiv');
+
+itowns.proj4.defs(
+    'EPSG:3946',
+    '+proj=lcc +lat_1=45.25 +lat_2=46.75 +lat_0=46 +lon_0=3 +x_0=1700000 +y_0=5200000 +ellps=GRS80 ' +
+    '+towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
+);
+const viewExtent = new itowns.Extent(
+    'EPSG:3946',
+    1837816.94334, 1847692.32501,
+    5170036.4587, 5178412.82698,
+);
+
+const view = new itowns.PlanarView(viewerDiv, viewExtent);
+</code></pre>
+<p>Several things are done here :</p>
+<ul>
+<li>First, we retrieve the <code>DomElement</code> relative to the container we created to serve as a support for iTowns.</li>
+<li>Then we define the geographic extent of our view by instantiating iTowns <code><a onclick="window.parent.goTo('api/Geographic/Extent.html','api/Geographic/Extent')" title="Extent">Extent</a></code> class.
+To do so, we need to pass five argument to <code><a onclick="window.parent.goTo('api/Geographic/Extent.html','api/Geographic/Extent')" title="Extent">Extent</a></code> constructor, which are :
+<ul>
+<li>The Coordinates Reference System (CRS) of the extent, given as its EPSG code.
+Here, we use <a href="https://epsg.io/3946">RGF93 / CC46</a> CRS.
+Not all CRS are defined by default within iTowns, which is why we need to define our CRS using
+<a href="https://proj.org/">proj4</a> prior to instantiating the <code><a onclick="window.parent.goTo('api/Geographic/Extent.html','api/Geographic/Extent')" title="Extent">Extent</a></code> ;</li>
+<li>The westernmost, easternmost, southernmost and northernmost coordinates of the extent.</li>
+</ul>
+</li>
+<li>Finally, we create a <code><a onclick="window.parent.goTo('api/View/PlanarView.html','api/View/PlanarView')" title="PlanarView">PlanarView</a></code> giving it the required <code>DomElement</code> and <code><a onclick="window.parent.goTo('api/Geographic/Extent.html','api/Geographic/Extent')" title="Extent">Extent</a></code> parameters.</li>
+</ul>
+<p>At this stage, our webpage should look like this :</p>
+<p><img src="images/Raster-data-CC46-1.png" alt="Simple PlanarView"></p>
+<p>The blue rectangle you can see is the view we just created.
+By default, iTowns position the camera on top of the view center.
+We can change the initial camera position by passing a <code>CameraTransformOption</code> object as an optional parameter of
+<code><a onclick="window.parent.goTo('api/View/PlanarView.html','api/View/PlanarView')" title="PlanarView">PlanarView</a></code> constructor.</p>
+<p>To do so, we first need to create our <code>CameraTransformOption</code> object :</p>
+<pre class="prettyprint source lang-js"><code>const placement = {
+    coord: viewExtent.center(),
+    tilt: 12,
+    heading: 40,
+    range: 6200,
+}
+</code></pre>
+<p>We are specifying here that the camera should target the center of the extent, with an azimuth of 40 degrees and a pitch
+of 12 degrees under the horizontal plane.
+The camera should also be at a distance of 6200 meters from its target (i.e. from the view extent center).</p>
+<p>We can then just pass this object into <code><a onclick="window.parent.goTo('api/View/PlanarView.html','api/View/PlanarView')" title="PlanarView">PlanarView</a></code> constructor parameters :</p>
+<pre class="prettyprint source lang-js"><code>const view = new itowns.PlanarView(viewerDiv, viewExtent, {
+    placement: placement,
+});
+</code></pre>
+<p>Our webpage should now look like this :</p>
+<p><img src="images/Raster-data-CC46-2.png" alt="PlanarView with placement"></p>
+<p>Now that we have a functional <code><a onclick="window.parent.goTo('api/View/View.html','api/View/View')" title="View">View</a></code>, we shall use it to display geographic data.</p>
+<h2>Add a color layer</h2>
+<p>The first data we want to display on our planar surface is ortho-images.
+To do so, we must define the source at which ortho-images data can be fetched thanks to the <code><a onclick="window.parent.goTo('api/Source/Source.html','api/Source/Source')" title="Source">Source</a></code> class.
+We can start displaying ortho-images provided by the Grand-Lyon metropolis as such :</p>
+<pre class="prettyprint source lang-js"><code>const sourceOrtho = new itowns.WMSSource({
+    url: 'https://download.data.grandlyon.com/wms/grandlyon',
+    name: 'Ortho2009_vue_ensemble_16cm_CC46',
+    format: 'image/jpeg',
+    crs: 'EPSG:3946',
+    extent: viewExtent,
+});
+const layerOrtho = new itowns.ColorLayer('Ortho', { source: sourceOrtho });
+view.addLayer(layerOrtho);
+</code></pre>
+<p>In this code, we first define the source specifications of the data we wish to fetch.
+<code><a onclick="window.parent.goTo('api/Source/WMSSource.html','api/Source/WMSSource')" title="WMSSource">WMSSource</a></code> needs several mandatory parameters :</p>
+<ul>
+<li>the server <code>url</code>, the <code>name</code> of the data and their <code>format</code>, which are used to generate the final <code>url</code> at which data
+shall be fetched ;</li>
+<li>the CRS of the fetched data ;</li>
+<li>the geographic extent of the resources (set here as the extent of the view).</li>
+</ul>
+<p>Then we create a <code><a onclick="window.parent.goTo('api/Layer/ColorLayer.html','api/Layer/ColorLayer')" title="ColorLayer">ColorLayer</a></code> from two parameters : a unique <code>id</code> for the layer (<code>Ortho</code>) as well as the
+<code><a onclick="window.parent.goTo('api/Source/Source.html','api/Source/Source')" title="Source">Source</a></code> instance for the layer data.</p>
+<p>Finally, we add the created layer to the view with <code>view.addLayer(layerOrtho);</code>.</p>
+<p>The result we get at this stage is the following, where we can see the newly added ortho-imagery layer :</p>
+<p><img src="images/Raster-data-CC46-3.png" alt="Ortho layer"></p>
+<h2>Add an elevation layer</h2>
+<p>The process of adding an <code><a onclick="window.parent.goTo('api/Layer/ElevationLayer.html','api/Layer/ElevationLayer')" title="ElevationLayer">ElevationLayer</a></code> is similar to what we just did with the <code><a onclick="window.parent.goTo('api/Layer/ColorLayer.html','api/Layer/ColorLayer')" title="ColorLayer">ColorLayer</a></code>.
+At first, we need to define the source of the elevation raster data.
+Then we can simply create the <code><a onclick="window.parent.goTo('api/Layer/ElevationLayer.html','api/Layer/ElevationLayer')" title="ElevationLayer">ElevationLayer</a></code>, giving it a unique <code>id</code> and the source configuration, and
+finally adding it to the view.</p>
+<pre class="prettyprint source lang-js"><code>const sourceDEM = new itowns.WMSSource({
+    url: 'https://download.data.grandlyon.com/wms/grandlyon',
+    name: 'MNT2018_Altitude_2m',
+    format: 'image/jpeg',
+    crs: 'EPSG:3946',
+    extent: viewExtent,
+});
+const layerDEM = new itowns.ElevationLayer('DEM', {
+    source: sourceDEM,
+    useColorTextureElevation: true,
+    colorTextureElevationMinZ: 144,
+    colorTextureElevationMaxZ: 622,
+});
+view.addLayer(layerDEM);
+</code></pre>
+<p>The information within raster DEM data we use here is stored within a color channel.
+Therefore, we must notify it with <code>useColorTextureElevation</code> parameter set to <code>true</code>, and we must also specify the
+minimal and maximal values found in the color channel.</p>
+<p>The result is shown bellow.</p>
+<p><img src="images/Raster-data-CC46-4.png" alt="dem layer"></p>
+<h2>Result</h2>
+<p>With this tutorial, we learnt how to use iTowns <code><a onclick="window.parent.goTo('api/Layer/ColorLayer.html','api/Layer/ColorLayer')" title="ColorLayer">ColorLayer</a></code> and an <code><a onclick="window.parent.goTo('api/Layer/ElevationLayer.html','api/Layer/ElevationLayer')" title="ElevationLayer">ElevationLayer</a></code> to display data in
+a local conic projection.
+The code that is shown bellow sums up all the steps it took to do so.</p>
+<pre class="prettyprint source lang-html"><code>&lt;!DOCTYPE html>
+&lt;html>
+    &lt;head>
+        &lt;meta charset=&quot;UTF-8&quot;>
+        &lt;title>Display a planar view with iTowns&lt;/title>
+        &lt;style>
+            html { height: 100%; }
+            body { margin: 0; overflow: hidden; height: 100%; }
+            #viewerDiv { margin: auto; height: 100%; width: 100%; padding: 0; }
+            canvas { display: block }
+        &lt;/style>
+    &lt;/head>
+    &lt;body>
+        &lt;div id=&quot;viewerDiv&quot;>&lt;/div>
+        &lt;script src=&quot;js/itowns.js&quot;>&lt;/script>
+        &lt;script type=&quot;text/javascript&quot;>
+
+            // Retrieve the view container
+            const viewerDiv = document.getElementById('viewerDiv');
+
+            // Define the view geographic extent
+            itowns.proj4.defs(
+                'EPSG:3946',
+                '+proj=lcc +lat_1=45.25 +lat_2=46.75 +lat_0=46 +lon_0=3 +x_0=1700000 +y_0=5200000 +ellps=GRS80 ' +
+                '+towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
+            );
+            const viewExtent = new itowns.Extent(
+                'EPSG:3946',
+                1837816.94334, 1847692.32501,
+                5170036.4587, 5178412.82698,
+            );
+
+            // Define the camera initial placement
+            const placement = {
+                coord: viewExtent.center(),
+                tilt: 12,
+                heading: 40,
+                range: 6200,
+            };
+
+            // Create the planar view
+            const view = new itowns.PlanarView(viewerDiv, viewExtent, {
+                placement: placement,
+            });
+
+            // Define the source of the ortho-images
+            const sourceOrtho = new itowns.WMSSource({
+                url: 'https://download.data.grandlyon.com/wms/grandlyon',
+                name: 'Ortho2009_vue_ensemble_16cm_CC46',
+                format: 'image/jpeg',
+                crs: 'EPSG:3946',
+                extent: viewExtent,
+            });
+            // Create the ortho-images ColorLayer and add it to the view
+            const layerOrtho = new itowns.ColorLayer('Ortho', { source: sourceOrtho });
+            view.addLayer(layerOrtho);
+
+            // Define the source of the dem data
+            const sourceDEM = new itowns.WMSSource({
+                url: 'https://download.data.grandlyon.com/wms/grandlyon',
+                name: 'MNT2018_Altitude_2m',
+                format: 'image/jpeg',
+                crs: 'EPSG:3946',
+                extent: viewExtent,
+            });
+            // Create the dem ElevationLayer and add it to the view
+            const layerDEM = new itowns.ElevationLayer('DEM', {
+                source: sourceDEM,
+                useColorTextureElevation: true,
+                colorTextureElevationMinZ: 144,
+                colorTextureElevationMaxZ: 622,
+            });
+            view.addLayer(layerDEM);
+            
+        &lt;/script>
+    &lt;/body>
+&lt;/html>
+</code></pre>
+</article>
+
+</section>
+
+<script> prettyPrint(); </script>
+<script src="../scripts/linenumber.js"> </script>
+</body>
+</html>
