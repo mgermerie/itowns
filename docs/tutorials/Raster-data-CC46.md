@@ -1,6 +1,6 @@
 The goal of this tutorial is to give an example on how to use iTowns to visualize data that are in 
-[RGF93 / CC46](https://epsg.io/3946) Coordinate Reference System (CRS).
-These data are ortho-images and Digital Elevation Models provided by Grand Lyon metropolis.
+[RGF93 / Lambert-93](https://epsg.io/2154) Coordinate Reference System (CRS). These data are ortho-images and Digital 
+Elevation Models provided by the [Geoportail](https://www.geoportail.gouv.fr) API.
 
 ## Preparing the webpage
 
@@ -39,22 +39,22 @@ We shall then add javascript to use iTowns to display data within a `<script>` m
 
 As mentioned in [fundamentals tutorial]{@tutorial Fundamentals}, we need a `{@link View}` to support any geographic data
 we wish to display.
-What we want here is to display data in a RGF93 / CC46 projection, which is a conic local projection. 
-Therefore, we should use a `{@link PlanarView}`, which is a specific type of `{@link View}` adapted to local projections.
-We can create it as such :
+What we want here is to display data in a RGF93 / Lambert-93 projection, which is a conic local projection. Therefore, 
+we should use a `{@link PlanarView}`, which is a specific type of `{@link View}` adapted to local projections. We can 
+create it as such :
 
 ```js
 const viewerDiv = document.getElementById('viewerDiv');
 
 itowns.proj4.defs(
-    'EPSG:3946',
-    '+proj=lcc +lat_1=45.25 +lat_2=46.75 +lat_0=46 +lon_0=3 +x_0=1700000 +y_0=5200000 +ellps=GRS80 ' +
-    '+towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
+    'EPSG:2154',
+    '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 ' +
+    '+units=m +no_defs',
 );
 const viewExtent = new itowns.Extent(
-    'EPSG:3946',
-    1837816.94334, 1847692.32501,
-    5170036.4587, 5178412.82698,
+    'EPSG:2154',
+    644500.0, 659499.99,
+    6857500.0, 6867499.99,
 );
 
 const view = new itowns.PlanarView(viewerDiv, viewExtent);
@@ -65,7 +65,7 @@ Several things are done here :
 - Then we define the geographic extent of our view by instantiating iTowns `{@link Extent}` class.
 To do so, we need to pass five argument to `{@link Extent}` constructor, which are :
   - The Coordinates Reference System (CRS) of the extent, given as its EPSG code.
-    Here, we use [RGF93 / CC46](https://epsg.io/3946) CRS.
+    Here, we use [RGF93 / Lambert-93](https://epsg.io/2154) CRS.
     Not all CRS are defined by default within iTowns, which is why we need to define our CRS using 
     [proj4](https://proj.org/) prior to instantiating the `{@link Extent}` ;
   - The westernmost, easternmost, southernmost and northernmost coordinates of the extent.
