@@ -98,6 +98,7 @@ jobs:
     - name: Download bundle potree
       uses: dawidd6/action-download-artifact@v2
       with:
+        github_token: ${{secrets.TEST_KEY}}
         workflow: intergration.yml
         repo: mgermerie/potree
         name: dist-potree
