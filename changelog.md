@@ -1,3 +1,20 @@
+<a name="2.41.0"></a>
+# [2.41.0](https://github.com/iTowns/itowns/compare/v2.39.0...v2.41.0) (2022-09-26)
+
+
+### Workflow and chores
+
+* release v2.41.0 ([8673fe0](https://github.com/iTowns/itowns/commit/8673fe0))
+* release v2.40.0 ([6b423fd](https://github.com/iTowns/itowns/commit/6b423fd))
+
+
+### Others
+
+* test ([773fa56](https://github.com/iTowns/itowns/commit/773fa56))
+* test ([b1be8b6](https://github.com/iTowns/itowns/commit/b1be8b6))
+
+
+
 <a name="2.40.0"></a>
 # [2.40.0](https://github.com/iTowns/itowns/compare/v2.38.2...v2.40.0) (2022-09-26)
 
