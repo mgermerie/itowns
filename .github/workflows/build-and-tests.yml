@@ -100,7 +100,7 @@ jobs:
     # Deploy on itowns.github.io website
     deploy:
         name: Deploy to itowns.github.io
-        if: ${{ github.ref == 'refs/heads/master' && startsWith( github.event.head_commit.message, 'release v' ) }}
+        if: ${{ github.ref == 'refs/heads/master' }}
         needs: tests
         runs-on: ubuntu-latest
         steps:
