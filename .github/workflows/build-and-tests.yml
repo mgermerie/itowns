@@ -48,9 +48,9 @@ jobs:
               run: npm run test-with-coverage_lcov
 
             # Run functional tests
-            - name: Functional tests
-              if: ${{ success() }}
-              run: npm run test-functional
+#            - name: Functional tests
+#              if: ${{ success() }}
+#              run: npm run test-functional
 
             # Code coverage
             - name: Coveralls
@@ -119,7 +119,7 @@ jobs:
                   # TODO : rename potree file...
                   workflow: intergration.yml
                   repo: LIDAR-HD-IGN/potree
-                  branch: itowns-potree
+                  branch: itowns_potree
                   name: dist-potree
 
             # Copy files for deployment
