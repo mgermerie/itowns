@@ -66,6 +66,7 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
 
+  # If it is a release : publish package on npm and deploy on website
   # Publish package npm
   publish:
     needs: tests
@@ -87,7 +88,7 @@ jobs:
   # Deploy on web site
   deploy:
     needs: tests
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: ${{ github.ref == 'refs/heads/master' && startsWith( github.event.head_commit.message, 'release v' ) }}
     runs-on: ubuntu-latest
     name: Deploy to itowns.github.io
     steps:
