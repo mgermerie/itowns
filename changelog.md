@@ -1,3 +1,54 @@
+<a name="2.40.0"></a>
+# [2.40.0](https://github.com/iTowns/itowns/compare/v2.38.2...v2.40.0) (2022-09-26)
+
+
+### Features
+
+* **debug:** add altitude to displayed coordinates. ([e1fea9f](https://github.com/iTowns/itowns/commit/e1fea9f))
+* **globeControls:** add configuration parameters and documentation ([cdd865c](https://github.com/iTowns/itowns/commit/cdd865c))
+* **globeView:** allow to configure globeControls when creating a globeView ([821e522](https://github.com/iTowns/itowns/commit/821e522))
+
+
+### Bug Fixes
+
+* **LayeredMaterial:** fix opacity when initialized to 0 ([deac41e](https://github.com/iTowns/itowns/commit/deac41e))
+* **picking:** fix picking on multiple layers ([5c2f578](https://github.com/iTowns/itowns/commit/5c2f578))
+* **Scheduler:** replace url subdomains alternatives ([91fd9ec](https://github.com/iTowns/itowns/commit/91fd9ec))
+
+
+### Performance Improvements
+
+* **picking:** don't pick atmosphere layer ([069b2dd](https://github.com/iTowns/itowns/commit/069b2dd))
+
+
+### Examples
+
+* **3dtiles_25d:** change data url ([52a412f](https://github.com/iTowns/itowns/commit/52a412f))
+* **GuiTools:** fix opacity slider by adding step ([3b205bc](https://github.com/iTowns/itowns/commit/3b205bc))
+
+
+### Workflow and chores
+
+* release v2.40.0 ([729f353](https://github.com/iTowns/itowns/commit/729f353))
+* release v2.39.0 ([c165599](https://github.com/iTowns/itowns/commit/c165599))
+* add a script to start an https local session with webpack ([e99bf15](https://github.com/iTowns/itowns/commit/e99bf15))
+* **deps:** bump terser from 5.13.1 to 5.14.2 ([7134b26](https://github.com/iTowns/itowns/commit/7134b26))
+* **integration:** add option to launch integration workflow manually ([db05ed6](https://github.com/iTowns/itowns/commit/db05ed6))
+* **integration:** update potree repository ([39fbdd7](https://github.com/iTowns/itowns/commit/39fbdd7))
+* up chalk to 5.0.1 ([1a30d66](https://github.com/iTowns/itowns/commit/1a30d66))
+* update CONTRIBUTORS.md ([ba33056](https://github.com/iTowns/itowns/commit/ba33056))
+* update packages. ([3dac8b9](https://github.com/iTowns/itowns/commit/3dac8b9))
+
+
+### Others
+
+* test ([574b3be](https://github.com/iTowns/itowns/commit/574b3be))
+* [test] ([77a5a9b](https://github.com/iTowns/itowns/commit/77a5a9b))
+* [TEST] ([03e7279](https://github.com/iTowns/itowns/commit/03e7279))
+* example(MNS) ([2f9d558](https://github.com/iTowns/itowns/commit/2f9d558))
+
+
+
 <a name="2.39.0"></a>
 # [2.39.0](https://github.com/iTowns/itowns/compare/v2.38.2...v2.39.0) (2022-09-26)
 
