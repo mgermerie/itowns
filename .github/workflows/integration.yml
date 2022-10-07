@@ -95,12 +95,12 @@ jobs:
             - run: npm ci
             - run: npm run prepare
 
-            - run: npm run publish-next
+            - if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
+              run: npm run publish-latest
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-            - if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
-              run: npm run publish-latest
+            - run: npm run publish-next
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
