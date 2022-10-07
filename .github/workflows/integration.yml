@@ -115,6 +115,7 @@ jobs:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 
+
     # Deploy on itowns.github.io website
 #    deploy:
 #        name: Deploy to itowns.github.io
