@@ -94,7 +94,12 @@ jobs:
 
             - run: npm ci
             - run: npm run prepare
-            - run: npm publish --access public
+            - if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
+              run: npm publish --access public --tag=latest
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            - if: ${{ !startsWith(github.event.head_commit.message, 'release v' ) }}
+              run: npm publish --access public --tag=next
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
