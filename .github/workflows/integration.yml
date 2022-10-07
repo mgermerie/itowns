@@ -89,6 +89,8 @@ jobs:
               with:
                   fetch-depth: 0
 
+            - uses: fregante/setup-git-user@v1
+
             - uses: actions/setup-node@v1
               with:
                   node-version: 15
