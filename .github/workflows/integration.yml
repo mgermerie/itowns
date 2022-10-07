@@ -109,6 +109,7 @@ jobs:
               run: |
                   git checkout next
                   git merge master
+                  git push
                   npm run publish-next
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
