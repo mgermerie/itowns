@@ -60,9 +60,9 @@ jobs:
 #                  github-token: ${{ secrets.GITHUB_TOKEN }}
 
             # Build documentation
-            - name: Build documentation
-              if: ${{ success() && github.ref == 'refs/heads/master' }}
-              run: npm run doc -- -d buildDocs
+#            - name: Build documentation
+#              if: ${{ success() && github.ref == 'refs/heads/master' }}
+#              run: npm run doc -- -d buildDocs
 
             # Prepare archive for deploying
             - name: Archive production artifacts
@@ -86,6 +86,8 @@ jobs:
         steps:
 
             - uses: actions/checkout@v2
+              with:
+                  fetch-depth: 0
 
             - uses: actions/setup-node@v1
               with:
@@ -100,142 +102,141 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-            - uses: actions/checkout@v2
-              with:
-                  ref: next
-
-            - run: npm run publish-next
+            - run: |
+                  git checkout next
+                  git merge master
+                  npm run publish-next
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 
     # Deploy on itowns.github.io website
-    deploy:
-        name: Deploy to itowns.github.io
-        if: ${{ github.ref == 'refs/heads/master' }}
-        needs: tests
-        runs-on: ubuntu-latest
-        steps:
-
-            # Download artifact from build
-            - name: Download itowns bundle
-              uses: actions/download-artifact@v2
-              with:
-                  name: dist-itowns
-
-            # Deploy potree repo artifact
-            # TODO : this should be done in potree integration script
-            - name: Download potree bundle
-              uses: dawidd6/action-download-artifact@v2
-              with:
-                  # TODO : rename potree file...
-                  workflow: intergration.yml
-                  repo: LIDAR-HD-IGN/potree
-                  branch: itowns_potree
-                  name: dist-potree
-
-            # Copy files for deployment
-            - name: build site
-              run: |
-                  mkdir -p itowns/dist
-                  mkdir -p itowns/potree/build
-                  mkdir -p itowns/potree/libs
-                  cp -R dist/*.js itowns/dist/
-                  cp -R examples itowns/
-                  cp -R buildDocs itowns/docs
-                  cp -R build itowns/potree/
-                  cp -R libs itowns/potree/
-
-            # Deploy to itowns.github.io LTS
-            - name: Deploy LTS to itowns.github.io
-              if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
-              uses: peaceiris/actions-gh-pages@v3
-              with:
-                  deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-                  external_repository: mgermerie/itowns.github.io
-                  publish_dir: ./itowns
-                  destination_dir: ./itowns
-                  publish_branch: master
-                  enable_jekyll: true
-
-            # Deploy to itowns.github.io Dev
-            - name: Deploy Dev to itowns.github.io
-              if: ${{ !startsWith(github.event.head_commit.message, 'release v' ) }}
-              uses: peaceiris/actions-gh-pages@v3
-              with:
-                  deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-                  external_repository: mgermerie/itowns.github.io
-                  publish_dir: ./itowns
-                  destination_dir: ./itowns-dev
-                  publish_branch: master
-                  enable_jekyll: true
+#    deploy:
+#        name: Deploy to itowns.github.io
+#        if: ${{ github.ref == 'refs/heads/master' }}
+#        needs: tests
+#        runs-on: ubuntu-latest
+#        steps:
+#
+#            # Download artifact from build
+#            - name: Download itowns bundle
+#              uses: actions/download-artifact@v2
+#              with:
+#                  name: dist-itowns
+#
+#            # Deploy potree repo artifact
+#            # TODO : this should be done in potree integration script
+#            - name: Download potree bundle
+#              uses: dawidd6/action-download-artifact@v2
+#              with:
+#                  # TODO : rename potree file...
+#                  workflow: intergration.yml
+#                  repo: LIDAR-HD-IGN/potree
+#                  branch: itowns_potree
+#                  name: dist-potree
+#
+#            # Copy files for deployment
+#            - name: build site
+#              run: |
+#                  mkdir -p itowns/dist
+#                  mkdir -p itowns/potree/build
+#                  mkdir -p itowns/potree/libs
+#                  cp -R dist/*.js itowns/dist/
+#                  cp -R examples itowns/
+#                  cp -R buildDocs itowns/docs
+#                  cp -R build itowns/potree/
+#                  cp -R libs itowns/potree/
+#
+#            # Deploy to itowns.github.io LTS
+#            - name: Deploy LTS to itowns.github.io
+#              if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
+#              uses: peaceiris/actions-gh-pages@v3
+#              with:
+#                  deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+#                  external_repository: mgermerie/itowns.github.io
+#                  publish_dir: ./itowns
+#                  destination_dir: ./itowns
+#                  publish_branch: master
+#                  enable_jekyll: true
+#
+#            # Deploy to itowns.github.io Dev
+#            - name: Deploy Dev to itowns.github.io
+#              if: ${{ !startsWith(github.event.head_commit.message, 'release v' ) }}
+#              uses: peaceiris/actions-gh-pages@v3
+#              with:
+#                  deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+#                  external_repository: mgermerie/itowns.github.io
+#                  publish_dir: ./itowns
+#                  destination_dir: ./itowns-dev
+#                  publish_branch: master
+#                  enable_jekyll: true
 
 
     # Create GitHub release
-    release:
-        name: Release GitHub
-        if: ${{ github.ref == 'refs/heads/master' && startsWith( github.event.head_commit.message, 'release v' ) }}
-        needs: tests
-        runs-on: ubuntu-latest
-        steps:
-
-            - uses: actions/checkout@v2
-
-            - name: Use Node.js 15.x
-              uses: actions/setup-node@v2
-              with:
-                  node-version: 15.x
-
-            - name: Message commit
-              run: echo "is RELEASE => ${{ github.event.head_commit.message }} !!"
-
-            - name: Get release version
-              run: echo ::set-output name=VERSION::$(node -e "console.log(require('./package.json').version);")
-              id: npm_pack
-
-            - name: itowns Version
-              run: echo "The iTowns release version is ${{ steps.npm_pack.outputs.VERSION }}"
-
-            # Add tag
-            - name: Tag branch
-              run: |
-                  git config user.name github-actions
-                  git config user.email github-actions@github.com
-                  git tag -a v${{ steps.npm_pack.outputs.VERSION }} -m "release v${{ steps.npm_pack.outputs.VERSION }}."
-                  git push --follow-tags
-
-            # Download artifact from build
-            - name: Download itowns bundle
-              uses: actions/download-artifact@v2
-              with:
-                  name: dist-itowns
-
-            # Create release
-            - name: Create release
-              id: create_release
-              uses: actions/create-release@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  tag_name: v${{ steps.npm_pack.outputs.VERSION }}
-                  release_name: Release ${{ steps.npm_pack.outputs.VERSION }}
-                  body_path: ./changelog.md
-                  draft: false
-                  prerelease: false
-
-            # Zip assets into bundle
-            - name: Zip assets
-              run: |
-                  zip --junk-paths bundles ./dist/*.js ./dist/*.map
-
-            # Upload release asset
-            - name: upload release asset
-              id: upload-release-asset
-              uses: actions/upload-release-asset@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./bundles.zip
-                  asset_name: bundles.zip
-                  asset_content_type: application/zip
+#    release:
+#        name: Release GitHub
+#        if: ${{ github.ref == 'refs/heads/master' && startsWith( github.event.head_commit.message, 'release v' ) }}
+#        needs: tests
+#        runs-on: ubuntu-latest
+#        steps:
+#
+#            - uses: actions/checkout@v2
+#
+#            - name: Use Node.js 15.x
+#              uses: actions/setup-node@v2
+#              with:
+#                  node-version: 15.x
+#
+#            - name: Message commit
+#              run: echo "is RELEASE => ${{ github.event.head_commit.message }} !!"
+#
+#            - name: Get release version
+#              run: echo ::set-output name=VERSION::$(node -e "console.log(require('./package.json').version);")
+#              id: npm_pack
+#
+#            - name: itowns Version
+#              run: echo "The iTowns release version is ${{ steps.npm_pack.outputs.VERSION }}"
+#
+#            # Add tag
+#            - name: Tag branch
+#              run: |
+#                  git config user.name github-actions
+#                  git config user.email github-actions@github.com
+#                  git tag -a v${{ steps.npm_pack.outputs.VERSION }} -m "release v${{ steps.npm_pack.outputs.VERSION }}."
+#                  git push --follow-tags
+#
+#            # Download artifact from build
+#            - name: Download itowns bundle
+#              uses: actions/download-artifact@v2
+#              with:
+#                  name: dist-itowns
+#
+#            # Create release
+#            - name: Create release
+#              id: create_release
+#              uses: actions/create-release@v1
+#              env:
+#                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#              with:
+#                  tag_name: v${{ steps.npm_pack.outputs.VERSION }}
+#                  release_name: Release ${{ steps.npm_pack.outputs.VERSION }}
+#                  body_path: ./changelog.md
+#                  draft: false
+#                  prerelease: false
+#
+#            # Zip assets into bundle
+#            - name: Zip assets
+#              run: |
+#                  zip --junk-paths bundles ./dist/*.js ./dist/*.map
+#
+#            # Upload release asset
+#            - name: upload release asset
+#              id: upload-release-asset
+#              uses: actions/upload-release-asset@v1
+#              env:
+#                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#              with:
+#                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+#                  asset_path: ./bundles.zip
+#                  asset_name: bundles.zip
+#                  asset_content_type: application/zip
