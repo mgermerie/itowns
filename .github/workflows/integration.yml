@@ -99,12 +99,14 @@ jobs:
             - run: npm ci
             - run: npm run prepare
 
-            - if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
+            - name: publish itowns@latest npm package
+              if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
               run: npm run publish-latest
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-            - run: |
+            - name: publish itowns@next npm package
+              run: |
                   git checkout next
                   git merge master
                   npm run publish-next
