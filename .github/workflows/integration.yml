@@ -44,20 +44,20 @@ jobs:
         run: npm run build
 
       # Run unit tests
-      - name: Unit tests
-        run: npm run test-with-coverage_lcov
+      #- name: Unit tests
+      #  run: npm run test-with-coverage_lcov
 
-      # Run functional tests
-      # TODO: functional tests don't stop if one fails
-      - name: Functional tests
-        if: ${{ success() }}
-        run: npm run test-functional
+      ## Run functional tests
+      ## TODO: functional tests don't stop if one fails
+      #- name: Functional tests
+      #  if: ${{ success() }}
+      #  run: npm run test-functional
 
-      # Code coverage
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
+      ## Code coverage
+      #- name: Coveralls
+      #  uses: coverallsapp/github-action@master
+      #  with:
+      #      github-token: ${{ secrets.GITHUB_TOKEN }}
 
       # Build documentation
       - name: Build documentation
@@ -160,7 +160,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          external_repository: iTowns/itowns.github.io
+          external_repository: mgermerie/itowns.github.io
           publish_dir: ./itowns
           destination_dir: ./itowns
           publish_branch: master
@@ -172,7 +172,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          external_repository: iTowns/itowns.github.io
+          external_repository: mgermerie/itowns.github.io
           publish_dir: ./itowns
           destination_dir: ./itowns-dev
           publish_branch: master
