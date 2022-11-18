@@ -168,7 +168,6 @@ jobs:
 
       # Deploy to itowns.github.io Dev
       - name: Deploy Dev to itowns.github.io
-        if: ${{ !startsWith(github.event.head_commit.message, 'release v' ) }}
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
