@@ -16,12 +16,16 @@
 
 <nav class="scroll-section">
     <a href="/">
-        <img src="images/itowns_logo.png" width="245px"/>
+        <img src="images/itowns_logo.png" width="245px" id="itowns-logo">
     </a>
 </nav>
 
 <script type="text/javascript">
     var baseURI = document.baseURI;
+
+    if (baseURI.includes('/itowns-dev/')) {
+        document.getElementById('itowns-logo').setAttribute('src', 'images/itowns_logo_next.png');
+    }
 
     function bindIframe() {
         var navLinks = document.getElementsByClassName('nav-link');
@@ -84,6 +88,10 @@
         document.getElementsByTagName('nav')[0].insertAdjacentHTML('beforeend', nav);
 
         // Add version switch :
+        const titleDivider = document.createElement('hr');
+        titleDivider.classList.add('title-divider');
+        document.getElementsByTagName('nav')[0].appendChild(titleDivider);
+
         const versionSwitch = document.createElement('p');
         versionSwitch.id = "version-switch";
 

@@ -38,6 +38,10 @@
 <script type="text/javascript">
     var baseURI = document.baseURI;
 
+    if (baseURI.includes('/itowns-dev/')) {
+        document.getElementById('goToHome').setAttribute('src', 'images/itowns_logo_next.png');
+    }
+
     function bindIframe() {
         var navLinks = document.getElementsByClassName('nav-link');
         for (var i = 0; i < navLinks.length; i++) {
