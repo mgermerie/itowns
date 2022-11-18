@@ -159,7 +159,7 @@ jobs:
         if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
         uses: peaceiris/actions-gh-pages@v3
         with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          deploy_key: ${{ secrets.SSH_DEPLOY_KEY_LATEST }}
           external_repository: mgermerie/itowns.github.io
           publish_dir: ./itowns
           destination_dir: ./itowns
@@ -168,10 +168,9 @@ jobs:
 
       # Deploy to itowns.github.io Dev
       - name: Deploy Dev to itowns.github.io
-        if: ${{ !startsWith(github.event.head_commit.message, 'release v' ) }}
         uses: peaceiris/actions-gh-pages@v3
         with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          deploy_key: ${{ secrets.SSH_DEPLOY_KEY_NEXT }}
           external_repository: mgermerie/itowns.github.io
           publish_dir: ./itowns
           destination_dir: ./itowns-dev
