@@ -206,7 +206,7 @@ class GlobeControls extends THREE.EventDispatcher {
         // These options actually enables dollying in and out; left as "zoom" for
         // backwards compatibility
         if (options.zoomSpeed) {
-            console.warn('Controls zoomSpeed parameter is deprecated. Use zoomFactor instead.');
+            console.warn('Control zoomSpeed parameter is deprecated. Use zoomFactor instead.');
             options.zoomFactor = options.zoomFactor || options.zoomSpeed;
         }
         this.zoomFactor = options.zoomFactor || 1.25;
