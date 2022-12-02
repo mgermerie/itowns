@@ -153,7 +153,7 @@ let previous;
  * GlobeControls is a camera controller
  *
  * @class      GlobeControls
- * @param      {GlobeView}  view the view where TEST the control will be used
+ * @param      {GlobeView}  view the view where TEST NUMBER 2 the control will be used
  * @param      {CameraTransformOptions|Extent} placement   the {@link CameraTransformOptions} to apply to view's camera
  * or the extent it must display at initialisation, see {@link CameraTransformOptions} in {@link CameraUtils}.
  * @param      {object}  [options] An object with one or more configuration properties. Any property of GlobeControls
