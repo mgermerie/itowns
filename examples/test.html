@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <title>Itowns - image</title>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" type="text/css" href="css/example.css">
+        <link rel="stylesheet" type="text/css" href="css/LoadingScreen.css">
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js"></script>
+    </head>
+    <body>
+        <div id="viewerDiv"></div>
+
+        <!-- Import iTowns source code -->
+        <script src="../dist/itowns.js"></script>
+        <script src="../dist/debug.js"></script>
+        <!-- Import iTowns LoadingScreen and GuiTools plugins -->
+        <script src="js/GUI/LoadingScreen.js"></script>
+        <script src="js/GUI/GuiTools.js"></script>
+
+
+        <script type="text/javascript">
+
+
+
+            // ---------- CREATE A GlobeView FOR SUPPORTING DATA VISUALIZATION : ----------
+
+            // Define camera initial position
+            const placement = {
+                coord: new itowns.Coordinates('EPSG:4326', 2.351323, 48.856712),
+                range: 25000000,
+            }
+
+            // `viewerDiv` will contain iTowns' rendering area (`<canvas>`)
+            const viewerDiv = document.getElementById('viewerDiv');
+
+            // Create a GlobeView
+            const view = new itowns.GlobeView(viewerDiv, placement);
+
+            // Setup loading screen and debug menu
+            setupLoadingScreen(viewerDiv, view);
+            const debugMenu = new GuiTools('menuDiv', view);
+
+            // Display a realistic atmosphere
+            view.getLayerById('atmosphere').setRealisticOn(true);
+
+
+            // ---------- DISPLAY IMAGES ON EACH TILE : ----------
+
+            view.addLayer(
+                new itowns.ColorLayer('image', {
+                    source: new itowns.TMSSource({
+                        url: 'images/itowns_logo.png',
+                        crs: 'EPSG:4326',
+                    }),
+                }),
+            ).then(debugMenu.addLayerGUI.bind(debugMenu));
+
+
+
+            // ---------- DEBUG TOOLS : ----------
+
+            debug.createTileDebugUI(debugMenu.gui, view);
+
+</script>
+</body>
+</html>
