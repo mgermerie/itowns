@@ -127,15 +127,16 @@ jobs:
           name: dist-itowns
 
       # Deploy potree repo artifact
+      # THIS IS COMMENTED AT THE MOMENT AS POTREE ARTIFACT IS NOT USED YET IN EXAMPLES.
       # TODO : this should be done in potree integration script
-      - name: Download potree bundle
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          # TODO : rename potree file...
-          workflow: intergration.yml
-          repo: LIDAR-HD-IGN/potree
-          branch: itowns_potree
-          name: dist-potree
+      # - name: Download potree bundle
+      #   uses: dawidd6/action-download-artifact@v2
+      #   with:
+      #     # TODO : rename potree file...
+      #     workflow: intergration.yml
+      #     repo: LIDAR-HD-IGN/potree
+      #     branch: itowns_potree
+      #     name: dist-potree
 
       # Copy files for deployment
       - name: build site
@@ -146,8 +147,8 @@ jobs:
           cp -R dist/*.js itowns/dist/
           cp -R examples itowns/
           cp -R buildDocs itowns/docs
-          cp -R build itowns/potree/
-          cp -R libs itowns/potree/
+          # cp -R build itowns/potree/
+          # cp -R libs itowns/potree/
 
       - name: add dev bundle if release
         if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
