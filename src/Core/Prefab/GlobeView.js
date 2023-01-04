@@ -66,7 +66,7 @@ export const GLOBE_VIEW_EVENTS = {
 
 class GlobeView extends View {
     /**
-     * Creates a view of a globe.
+     * Creates a view of a globe. Je suis un exemple dev.
      *
      * @constructor
      * @extends View
