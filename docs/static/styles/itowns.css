@@ -75,6 +75,7 @@ nav h2 {
 }
 
 #clearFilterButton {
+    position: absolute;
     font-size: 1.3em;
     margin-left: 15px;
     text-decoration: none;
