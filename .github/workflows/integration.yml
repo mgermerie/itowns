@@ -110,8 +110,11 @@ jobs:
         if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
         run: |
           git checkout next
+          git status
           git reset master
+          git status
           npm run publish-next
+          git status
           git push -f
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
