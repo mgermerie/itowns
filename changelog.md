@@ -1,3 +1,112 @@
+<a name="2.41.0"></a>
+# [2.41.0](https://github.com/iTowns/itowns/compare/v2.38.2...v2.41.0) (2023-02-01)
+
+
+### Features
+
+* **3dtiles:** add support for 3d tiles from cesium ion server ([e9793a3](https://github.com/iTowns/itowns/commit/e9793a3))
+* **3dtiles:** add support for binary batch table ([47325ab](https://github.com/iTowns/itowns/commit/47325ab))
+* add a npm build task creating a non minified version ([48a24fa](https://github.com/iTowns/itowns/commit/48a24fa))
+* **debug:** add altitude to displayed coordinates. ([e1fea9f](https://github.com/iTowns/itowns/commit/e1fea9f))
+* **globeControls:** add configuration parameters and documentation ([cdd865c](https://github.com/iTowns/itowns/commit/cdd865c))
+* **globeView:** allow to configure globeControls when creating a globeView ([821e522](https://github.com/iTowns/itowns/commit/821e522))
+
+
+### Bug Fixes
+
+* **3dtiles:** fix and document 3d tiles material overriding ([8ade709](https://github.com/iTowns/itowns/commit/8ade709))
+* **3dtiles:** fix layer opacity and visibility change for 3d tiles pnts ([059fe5e](https://github.com/iTowns/itowns/commit/059fe5e))
+* **3dtiles:** handle tilesets with cesium specific uniforms in shaders ([04f8b40](https://github.com/iTowns/itowns/commit/04f8b40))
+* **3dtiles:** improve 3D Tiles cache cleaning ([284be24](https://github.com/iTowns/itowns/commit/284be24))
+* **3dtiles:** use correct batch table constructor for pnts tiles ([e1dbd63](https://github.com/iTowns/itowns/commit/e1dbd63))
+* change THREE.Math to THREE.MathUtils ([826b5bd](https://github.com/iTowns/itowns/commit/826b5bd))
+* **controls:** keyboard events are now on the domElement on the view instead of window ([d5c80f4](https://github.com/iTowns/itowns/commit/d5c80f4))
+* **gltf:** fix parsing of khr_binary_extension in gltf 1.0 files ([2bf9d2d](https://github.com/iTowns/itowns/commit/2bf9d2d))
+* **LayeredMaterial:** fix opacity when initialized to 0 ([deac41e](https://github.com/iTowns/itowns/commit/deac41e))
+* **ObjectRemovalHelper:** linked objects are not removed. ([05a0768](https://github.com/iTowns/itowns/commit/05a0768))
+* **picking:** fix picking on multiple layers ([5c2f578](https://github.com/iTowns/itowns/commit/5c2f578))
+* **Scheduler:** replace url subdomains alternatives ([91fd9ec](https://github.com/iTowns/itowns/commit/91fd9ec))
+* **view:** fix view resize when width or height is 0 ([dbd9ee3](https://github.com/iTowns/itowns/commit/dbd9ee3))
+* **view:** improve resource disposal by removing textures and allow to remove cache ([2497d00](https://github.com/iTowns/itowns/commit/2497d00))
+
+
+### Performance Improvements
+
+* **demutils:** texture data read optimization in elevation measurement ([9ee991c](https://github.com/iTowns/itowns/commit/9ee991c))
+* **picking:** don't pick atmosphere layer ([069b2dd](https://github.com/iTowns/itowns/commit/069b2dd))
+
+
+### Examples
+
+* **3dtiles_25d:** change data url ([52a412f](https://github.com/iTowns/itowns/commit/52a412f))
+* **3dtiles:** add an example to display OSM buildings from cesium ion server ([9e9acb0](https://github.com/iTowns/itowns/commit/9e9acb0))
+* **3dtiles:** rename some 3D tiles examples ([e032bf2](https://github.com/iTowns/itowns/commit/e032bf2))
+* **Camera animation:** cleanup example code ([2bfe4e6](https://github.com/iTowns/itowns/commit/2bfe4e6))
+* **GuiTools:** fix opacity slider by adding step ([3b205bc](https://github.com/iTowns/itowns/commit/3b205bc))
+
+
+### Code Refactoring
+
+* **c3DEngine:** deleting the unused method getUniqueThreejsLayer. ([9664006](https://github.com/iTowns/itowns/commit/9664006))
+* **feature:** use feature crs property for instance center property. ([e455bdb](https://github.com/iTowns/itowns/commit/e455bdb))
+* **GlobeControls:** remove three layer for helpers. ([a1a8391](https://github.com/iTowns/itowns/commit/a1a8391))
+* **THREE:** Remove Three.js layers using. ([971f175](https://github.com/iTowns/itowns/commit/971f175))
+
+
+### Workflow and chores
+
+* release v2.41.0 ([d7b088d](https://github.com/iTowns/itowns/commit/d7b088d))
+* release v2.40.0 ([ff08a3e](https://github.com/iTowns/itowns/commit/ff08a3e))
+* release v2.39.0 ([46f8c38](https://github.com/iTowns/itowns/commit/46f8c38))
+* add a script to start an https local session with webpack ([e99bf15](https://github.com/iTowns/itowns/commit/e99bf15))
+* **deployment:** prevent deploying potree bundle since it is not used yet ([8f7ae1a](https://github.com/iTowns/itowns/commit/8f7ae1a))
+* **deps:** bump loader-utils from 2.0.2 to 2.0.3 ([fd0f01b](https://github.com/iTowns/itowns/commit/fd0f01b))
+* **deps:** bump loader-utils from 2.0.3 to 2.0.4 ([cccacae](https://github.com/iTowns/itowns/commit/cccacae))
+* **deps:** bump terser from 5.13.1 to 5.14.2 ([7134b26](https://github.com/iTowns/itowns/commit/7134b26))
+* **integration:** add option to launch integration workflow manually ([db05ed6](https://github.com/iTowns/itowns/commit/db05ed6))
+* **integration:** differentiate deployment for LTS and current version ([470e306](https://github.com/iTowns/itowns/commit/470e306))
+* **integration:** publish latest and next npm packages ([f8996b3](https://github.com/iTowns/itowns/commit/f8996b3))
+* **integration:** update potree repository ([39fbdd7](https://github.com/iTowns/itowns/commit/39fbdd7))
+* up chalk to 5.0.1 ([1a30d66](https://github.com/iTowns/itowns/commit/1a30d66))
+* update CONTRIBUTORS.md ([ba33056](https://github.com/iTowns/itowns/commit/ba33056))
+* update packages. ([3dac8b9](https://github.com/iTowns/itowns/commit/3dac8b9))
+
+
+### Documentation
+
+* **3dtiles:** add documentation for 3d tiles source ([eb7c8ca](https://github.com/iTowns/itowns/commit/eb7c8ca))
+* **layers:** improve raster layers doc ([c53436a](https://github.com/iTowns/itowns/commit/c53436a))
+* **RasterTile:** fix faulty link ([7cf4fcf](https://github.com/iTowns/itowns/commit/7cf4fcf))
+* **tutorials:** Improve tutorial and add two tutorials for 3D tiles ([3063925](https://github.com/iTowns/itowns/commit/3063925))
+
+
+### Tests
+
+* **3dtiles:** add 3D Tiles batch table parsing tests ([f3bd6c7](https://github.com/iTowns/itowns/commit/f3bd6c7))
+* **3dtiles:** test 3d tiles sources and 3d tiles ion example ([47db4c7](https://github.com/iTowns/itowns/commit/47db4c7))
+
+
+### Others
+
+* test ([b05e87c](https://github.com/iTowns/itowns/commit/b05e87c))
+* test integration PR ([57f0727](https://github.com/iTowns/itowns/commit/57f0727))
+* fix integration ([85ef2cf](https://github.com/iTowns/itowns/commit/85ef2cf))
+* [TEMP]: test deployment ([0e8fb6a](https://github.com/iTowns/itowns/commit/0e8fb6a))
+* Typo in the readme redirecting to a 404 error ([04122a8](https://github.com/iTowns/itowns/commit/04122a8))
+* fix (wfs, wms, wmts): support urls ending with or without ? character ([f44dfb2](https://github.com/iTowns/itowns/commit/f44dfb2))
+* example(MNS) ([2f9d558](https://github.com/iTowns/itowns/commit/2f9d558))
+* **Feature2Texture:** prevent drawing points if they lack style ([5706e6f](https://github.com/iTowns/itowns/commit/5706e6f))
+* update three.js to 0.146.0 ([55e7016](https://github.com/iTowns/itowns/commit/55e7016))
+
+
+### BREAKING CHANGES
+
+* **3dtiles:** `C3DTBatchTable` constructor signature has changed from
+C3DTBatchTable(buffer, binaryLength, batchLength, registeredExtensions) to
+C3DTBatchTable(buffer, jsonLength, binaryLength, batchLength, registeredExtensions)
+
+
+
 <a name="2.40.0"></a>
 # [2.40.0](https://github.com/iTowns/itowns/compare/v2.38.2...v2.40.0) (2023-02-01)
 
