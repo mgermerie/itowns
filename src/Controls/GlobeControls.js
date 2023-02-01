@@ -60,7 +60,7 @@ let lastTimeMouseMove = 0;
 let enableAnimation = true;
 const dampingFactorDefault = 0.25;
 const dampingMove = new THREE.Quaternion(0, 0, 0, 1);
-const durationDampingMove = 120;
+const durationDampingMove = 125;
 const durationDampingOrbital = 60;
 
 // Pan Move
