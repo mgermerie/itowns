@@ -111,7 +111,7 @@ jobs:
         run: |
           git checkout next
           git status
-          git reset master
+          git reset --hard master
           git status
           npm run publish-next
           git status
