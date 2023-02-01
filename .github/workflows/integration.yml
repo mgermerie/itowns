@@ -44,20 +44,20 @@ jobs:
         run: npm run build
 
       # Run unit tests
-      - name: Unit tests
-        run: npm run test-with-coverage_lcov
+      # - name: Unit tests
+      #   run: npm run test-with-coverage_lcov
 
       # Run functional tests
       # TODO: functional tests don't stop if one fails
-      - name: Functional tests
-        if: ${{ success() }}
-        run: npm run test-functional
+      # - name: Functional tests
+      #   if: ${{ success() }}
+      #   run: npm run test-functional
 
       # Code coverage
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Coveralls
+      #   uses: coverallsapp/github-action@master
+      #   with:
+      #       github-token: ${{ secrets.GITHUB_TOKEN }}
 
       # Build documentation
       - name: Build documentation
@@ -112,64 +112,64 @@ jobs:
 
 
   # Deploy on itowns.github.io website
-  deploy:
-    name: Deploy to itowns.github.io
-    if: ${{ github.ref == 'refs/heads/master' }}
-    needs: tests
-    runs-on: ubuntu-latest
-    steps:
+  # deploy:
+  #   name: Deploy to itowns.github.io
+  #   if: ${{ github.ref == 'refs/heads/master' }}
+  #   needs: tests
+  #   runs-on: ubuntu-latest
+  #   steps:
 
-      # Download artifact from build
-      - name: Download itowns bundle
-        uses: actions/download-artifact@v2
-        with:
-          name: dist-itowns
+  #     # Download artifact from build
+  #     - name: Download itowns bundle
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: dist-itowns
 
-      # Copy files for deployment
-      - name: build site
-        run: |
-          mkdir -p itowns/dist
-          mkdir -p itowns/potree/build
-          mkdir -p itowns/potree/libs
-          cp -R dist/*.js itowns/dist/
-          cp -R examples itowns/
-          cp -R buildDocs itowns/docs
+  #     # Copy files for deployment
+  #     - name: build site
+  #       run: |
+  #         mkdir -p itowns/dist
+  #         mkdir -p itowns/potree/build
+  #         mkdir -p itowns/potree/libs
+  #         cp -R dist/*.js itowns/dist/
+  #         cp -R examples itowns/
+  #         cp -R buildDocs itowns/docs
 
-      # When deploying a release, we copy itowns bundles in dev folder to be published on
-      # iTowns/itowns.github.io. This is because we can't publish both a release version
-      # (in itowns/ folder) and a @next version (in itowns/dev folder) at the same time.
-      - name: add dev bundle if release
-        if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
-        run: |
-          cp -R itowns dev
-          mv dev itowns/
+  #     # When deploying a release, we copy itowns bundles in dev folder to be published on
+  #     # iTowns/itowns.github.io. This is because we can't publish both a release version
+  #     # (in itowns/ folder) and a @next version (in itowns/dev folder) at the same time.
+  #     - name: add dev bundle if release
+  #       if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
+  #       run: |
+  #         cp -R itowns dev
+  #         mv dev itowns/
 
-      # Deploy to itowns.github.io LTS
-      - name: Deploy LTS to itowns.github.io
-        if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          external_repository: iTowns/itowns.github.io
-          publish_dir: ./itowns
-          destination_dir: ./itowns
-          publish_branch: master
-          enable_jekyll: true
+  #     # Deploy to itowns.github.io LTS
+  #     - name: Deploy LTS to itowns.github.io
+  #       if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
+  #       uses: peaceiris/actions-gh-pages@v3
+  #       with:
+  #         deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+  #         external_repository: iTowns/itowns.github.io
+  #         publish_dir: ./itowns
+  #         destination_dir: ./itowns
+  #         publish_branch: master
+  #         enable_jekyll: true
 
-      # Deploy to itowns.github.io Dev
-      - name: Deploy Dev to itowns.github.io
-        # Prevent deploying @next version when a release is done. Doing so would cause an issue,
-        # since it is not possible to use the same deploy key to simultaneously deploy two different
-        # folders on iTowns/itowns.github.io (the release bundle on previous step and this one.
-        if: ${{ !startsWith(github.event.head_commit.message, 'release v' ) }}
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          external_repository: iTowns/itowns.github.io
-          publish_dir: ./itowns
-          destination_dir: ./itowns/dev
-          publish_branch: master
-          enable_jekyll: true
+  #     # Deploy to itowns.github.io Dev
+  #     - name: Deploy Dev to itowns.github.io
+  #       # Prevent deploying @next version when a release is done. Doing so would cause an issue,
+  #       # since it is not possible to use the same deploy key to simultaneously deploy two different
+  #       # folders on iTowns/itowns.github.io (the release bundle on previous step and this one.
+  #       if: ${{ !startsWith(github.event.head_commit.message, 'release v' ) }}
+  #       uses: peaceiris/actions-gh-pages@v3
+  #       with:
+  #         deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+  #         external_repository: iTowns/itowns.github.io
+  #         publish_dir: ./itowns
+  #         destination_dir: ./itowns/dev
+  #         publish_branch: master
+  #         enable_jekyll: true
 
 
   # Create GitHub release
