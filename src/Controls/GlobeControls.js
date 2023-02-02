@@ -61,7 +61,7 @@ let enableAnimation = true;
 const dampingFactorDefault = 0.25;
 const dampingMove = new THREE.Quaternion(0, 0, 0, 1);
 const durationDampingMove = 120;
-const durationDampingOrbital = 60;
+const durationDampingOrbital = 50;
 
 // Pan Move
 const panVector = new THREE.Vector3();
