@@ -82,7 +82,7 @@ const enableTargetHelper = false;
 const helpers = {};
 
 if (enableTargetHelper) {
-    helpers.picking = new THREE.AxesHelper(500000);
+    helpers.picking = new THREE.AxesHelper(600000);
     helpers.target = new THREE.AxesHelper(500000);
 }
 
