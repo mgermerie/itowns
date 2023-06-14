@@ -1,6 +1,10 @@
 import * as THREE from 'three';
+/*
+// [WIP] batchtable
+import { Tile3DBatchTable, Tile3DFeatureTable } from '@loaders.gl/3d-tiles';
+*/
 import GeometryLayer from 'Layer/GeometryLayer';
-import { pre3dTilesUpdate } from 'Process/3dTilesProcessing';
+// import { pre3dTilesUpdate } from 'Process/3dTilesProcessing';
 import C3DTExtensions from 'Core/3DTiles/C3DTExtensions';
 import { PNTS_MODE } from 'Renderer/PointsMaterial';
 // eslint-disable-next-line no-unused-vars
@@ -119,7 +123,7 @@ class C3DTilesLayer extends GeometryLayer {
             const { model, runtime } = a;
             this.tilesRuntime = runtime;
 
-            this.source.view.scene.add(model);
+            this.object3d.add(model);
             const add = model.add;
 
             model.add = (object) => {
@@ -140,6 +144,16 @@ class C3DTilesLayer extends GeometryLayer {
             context.camera.camera3D.updateMatrix();
             context.camera.camera3D.updateMatrixWorld(true);
             this.tilesRuntime.update(dt, context.engine.renderer, context.camera.camera3D);
+            this.object3d.add(this.tilesRuntime.getTileBoxes());
+            /*
+            // WIP Batchtable
+            const tileSet = this.tilesRuntime.getTileset();
+            tileSet.selectedTiles.forEach((s) => {
+                const tile = s.content;
+                const batchTable = new Tile3DBatchTable(tile.batchTableJson, tile.batchTableBinary, 2);
+                const featureTable = new Tile3DFeatureTable(tile.featureTableJson, tile.featureTableBinary);
+            });
+            */
         }
     }
 
@@ -180,8 +194,9 @@ class C3DTilesLayer extends GeometryLayer {
             const i = intersects[index];
             if (i.object.geometry &&
                 i.object.geometry.attributes._BATCHID &&
-                i.face && // need face to get batch id
-                i.layer == this // just to be sure that the right layer intersected
+                i.face
+                // && // need face to get batch id
+                // i.layer == this // just to be sure that the right layer intersected
             ) {
                 closestIntersect = i;
                 break;
@@ -191,6 +206,14 @@ class C3DTilesLayer extends GeometryLayer {
         if (!closestIntersect) {
             return null;
         }
+
+        /*
+        // [WIP] Tile3DBatchTable
+        const tileset3d = this.tilesRuntime.getTileset();
+        const tile = tileset3d.tiles.filter(tile => tile.selected)[0].content;
+
+        const batchTable = new Tile3DBatchTable(tile.batchTableJson, tile.batchTableBinary, 2);
+        const featureTable = new Tile3DFeatureTable(tile.featureTableJson, tile.featureTableBinary);
 
         // function find the tile id from an object
         function findTileID(object) {
@@ -204,13 +227,16 @@ class C3DTilesLayer extends GeometryLayer {
             return result;
         }
 
-        const tileId = findTileID(closestIntersect.object);
+        // const tileId = findTileID(closestIntersect.object);
         // face is a Face3 object of THREE which is a
         // triangular face. face.a is its first vertex
-        const vertex = closestIntersect.face.a;
-        const batchID = closestIntersect.object.geometry.attributes._BATCHID.array[vertex];
+        // const vertex = closestIntersect.face.a;
+        // const batchID = closestIntersect.object.geometry.attributes._BATCHID.array[vertex];
+        // const foo = batchTable.getExactClassName(1);
 
-        return this.tilesC3DTileFeatures.get(tileId).get(batchID);
+        // return this.tilesC3DTileFeatures.get(tileId).get(batchID);
+
+        */
     }
 
     /**
