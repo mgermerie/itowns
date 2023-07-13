@@ -73,9 +73,9 @@
             // defined in a json file.
             function addElevationLayerFromConfig(config) {
                 config.source = new itowns.WMTSSource(config.source);
-                view.addLayer(
-                    new itowns.ElevationLayer(config.id, config),
-                );
+                // view.addLayer(
+                //     new itowns.ElevationLayer(config.id, config),
+                // );
             }
             itowns.Fetcher.json('./layers/JSONLayers/IGN_MNT_HIGHRES.json').then(addElevationLayerFromConfig);
             itowns.Fetcher.json('./layers/JSONLayers/WORLD_DTM.json').then(addElevationLayerFromConfig);
@@ -95,8 +95,10 @@
             // Create a 3D Tiles layer from Cesium ion server with Cesium default access token and assetId of the 
             // OSM buildings dataset.
             var threeDTilesIonSource = new itowns.C3DTilesIonSource({
-                accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzOTkxZjY3NS0yNDU4LTQ3MTAtOGQ2NC1lOGI4YmY5ODhhYjQiLCJpZCI6Mzg4OTQsImlhdCI6MTYwNjkyMDkwOH0.aVrPA4xnpbSUlqfJ9RkSWmZtms_hnSRz7m596h1R7ew',
-                assetId: 96188
+                accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyNzFhNmFiMy0xNzZkLTQxZjAtYmYzNS0yYjljNGIwMmQ4OGUiLCJpZCI6MTM3NTgxLCJpYXQiOjE2ODY3NTA0MTB9.7hl-Mlo6ytpIpFF2rfiEMEuxqgoKRKqWnC3SAMAJe74',
+                assetId: 69380,
+                view: view,
+                geoTransform: 3,
             });
             threeDTilesIonSource.whenReady.then(displayAttributions); // Add attributions returned by cesium ion server
             var threeDTilesIonLayer = new itowns.C3DTilesLayer('3d-tiles-cesium-ion', {
@@ -105,7 +107,9 @@
                 registeredExtensions: extensions,
             }, view);
 
-            itowns.View.prototype.addLayer.call(view, threeDTilesIonLayer);
+            itowns.View.prototype.addLayer.call(view, threeDTilesIonLayer).then((l) => {
+                // view.controls.lookAtCoordinate({ coord: new itowns.Coordinates('EPSG:4978',0,0,0).setFromVector3(l.object3d.position), range: 1000}, false);
+            });
 
             // Automatically convert cesium html attributions into html node elements and append them to the
             // attributions div

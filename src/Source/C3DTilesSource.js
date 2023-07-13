@@ -1,5 +1,25 @@
 import Source from 'Source/Source';
-import Fetcher from 'Provider/Fetcher';
+// import Fetcher from 'Provider/Fetcher';
+import { Loader3DTiles } from 'ThreeExtended/three-loader-3dtiles';
+
+const GeoTransform = {
+    Reset: 1,
+    Mercator: 2,
+    WGS84Cartesian: 3,
+};
+// eslint-disable-next-line no-unused-vars
+const PointCloudColoring = {
+    Intensity: 1,
+    Classification: 2,
+    Elevation: 3,
+    RGB: 4,
+    White: 5,
+};
+const Shading = {
+    FlatTexture: 1,
+    ShadedTexture: 2,
+    ShadedNoTexture: 3,
+};
 
 /**
  * @classdesc
@@ -26,7 +46,26 @@ class C3DTilesSource extends Source {
         super(source);
         this.isC3DTilesSource = true;
         this.baseUrl = this.url.slice(0, this.url.lastIndexOf('/') + 1);
-        this.whenReady = Fetcher.json(this.url, this.networkOptions);
+
+        this.view = source.view;
+
+        this.whenReady = Loader3DTiles.load({
+            url: this.url,
+            renderer: source.view.mainLoop.gfxEngine.renderer,
+            onProgress: (a, b) => {
+                if (a < b) {
+                    this.view.notifyChange(this, true);
+                }
+            },
+            options: {
+                dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.146.0/examples/js/libs/draco',
+                basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.146.0/examples/js/libs/basis',
+                debug: true,
+                geoTransform: GeoTransform.WGS84Cartesian,
+                shading: Shading.ShadedTexture,
+                // maximumScreenSpaceError: 0.005,
+            },
+        });
     }
 }
 

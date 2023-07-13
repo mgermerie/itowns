@@ -50,6 +50,10 @@
                 sseThreshold: 0.05,
                 source: new itowns.C3DTilesSource({
                     url: 'https://raw.githubusercontent.com/CesiumGS/3d-tiles-samples/master/1.0/TilesetWithDiscreteLOD/tileset.json',
+                    renderer: view.mainLoop.gfxEngine.renderer,
+                    view: view, //.mainLoop.gfxEngine.renderer,
+
+                    geoTransform: 3,
                 }),
             }, view);
 
@@ -62,6 +66,9 @@
                 name: 'RequestVolume',
                 source: new itowns.C3DTilesSource({
                     url: 'https://raw.githubusercontent.com/CesiumGS/3d-tiles-samples/master/1.0/TilesetWithRequestVolume/tileset.json',
+                    renderer: view.mainLoop.gfxEngine.renderer,
+                    view: view, //.mainLoop.gfxEngine.renderer,
+                    geoTransform: 3,
                 }),
                 sseThreshold: 1,
             }, view);

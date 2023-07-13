@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import GeometryLayer from 'Layer/GeometryLayer';
-import { init3dTilesLayer, pre3dTilesUpdate, process3dTilesNode } from 'Process/3dTilesProcessing';
-import C3DTileset from 'Core/3DTiles/C3DTileset';
+import { pre3dTilesUpdate } from 'Process/3dTilesProcessing';
 import C3DTExtensions from 'Core/3DTiles/C3DTExtensions';
 import { PNTS_MODE } from 'Renderer/PointsMaterial';
 // eslint-disable-next-line no-unused-vars
@@ -25,8 +24,6 @@ export const C3DTILES_LAYER_EVENTS = {
      */
     ON_TILE_REQUESTED: 'on-tile-requested',
 };
-
-const update = process3dTilesNode();
 
 class C3DTilesLayer extends GeometryLayer {
     #fillColorMaterialsBuffer;
@@ -73,7 +70,7 @@ class C3DTilesLayer extends GeometryLayer {
      * @param {Style} [config.style=null] - style used for this layer
      * @param  {View}  view  The view
      */
-    constructor(id, config, view) {
+    constructor(id, config) {
         super(id, new THREE.Group(), { source: config.source });
         this.isC3DTilesLayer = true;
         this.sseThreshold = config.sseThreshold || 16;
@@ -90,7 +87,7 @@ class C3DTilesLayer extends GeometryLayer {
             const exists = Object.values(PNTS_MODE).includes(config.pntsMode);
             if (!exists) { console.warn("The points cloud mode doesn't exist. Use 'COLOR' or 'CLASSIFICATION' instead."); } else { this.pntsMode = config.pntsMode; }
         }
-
+        this.clock = new THREE.Clock();
 
         /** @type {Style} */
         this._style = config.style || null;
@@ -118,60 +115,35 @@ class C3DTilesLayer extends GeometryLayer {
 
         this._cleanableTiles = [];
 
-        const resolve = this.addInitializationStep();
+        this.source.whenReady.then((a) => {
+            const { model, runtime } = a;
+            this.tilesRuntime = runtime;
 
-        this.source.whenReady.then((tileset) => {
-            this.tileset = new C3DTileset(tileset, this.source.baseUrl, this.registeredExtensions);
-            // Verify that extensions of the tileset have been registered in the layer
-            if (this.tileset.extensionsUsed) {
-                for (const extensionUsed of this.tileset.extensionsUsed) {
-                    // if current extension is not registered
-                    if (!this.registeredExtensions.isExtensionRegistered(extensionUsed)) {
-                        // if it is required to load the tileset
-                        if (this.tileset.extensionsRequired &&
-                            this.tileset.extensionsRequired.includes(extensionUsed)) {
-                            console.error(
-                                `3D Tiles tileset required extension "${extensionUsed}" must be registered to the 3D Tiles layer of iTowns to be parsed and used.`);
-                        } else {
-                            console.warn(
-                                `3D Tiles tileset used extension "${extensionUsed}" must be registered to the 3D Tiles layer of iTowns to be parsed and used.`);
-                        }
-                    }
-                }
-            }
-            // TODO: Move all init3dTilesLayer code to constructor
-            init3dTilesLayer(view, view.mainLoop.scheduler, this, tileset.root).then(resolve);
+            this.source.view.scene.add(model);
+            const add = model.add;
+
+            model.add = (object) => {
+                add.bind(model)(object);
+                object.updateMatrix();
+                object.updateMatrixWorld(true);
+            };
         });
     }
 
     preUpdate() {
-        return pre3dTilesUpdate.bind(this)();
+        return [this];
     }
 
-    update(context, layer, node) {
-        return update(context, layer, node);
-    }
-
-    getObjectToUpdateForAttachedLayers(meta) {
-        if (meta.content) {
-            const result = [];
-            meta.content.traverse((obj) => {
-                if (obj.isObject3D && obj.material && obj.layer == meta.layer) {
-                    result.push(obj);
-                }
-            });
-            const p = meta.parent;
-            if (p && p.content) {
-                return {
-                    elements: result,
-                    parent: p.content,
-                };
-            } else {
-                return {
-                    elements: result,
-                };
-            }
+    update(context) {
+        const dt = this.clock.getDelta();
+        if (this.tilesRuntime) {
+            context.camera.camera3D.updateMatrix();
+            context.camera.camera3D.updateMatrixWorld(true);
+            this.tilesRuntime.update(dt, context.engine.renderer, context.camera.camera3D);
         }
+    }
+
+    getObjectToUpdateForAttachedLayers() {
     }
 
     /**

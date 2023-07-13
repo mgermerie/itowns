@@ -1,5 +1,6 @@
+import { Loader3DTiles } from 'ThreeExtended/three-loader-3dtiles';
 import Fetcher from 'Provider/Fetcher';
-import C3DTilesSource from './C3DTilesSource';
+import Source from 'Source/Source';
 
 /**
  * @classdesc
@@ -14,7 +15,7 @@ import C3DTilesSource from './C3DTilesSource';
  * @property {string} accessToken - The Cesium ion access token used to retrieve the resource.
  * @property {string} assetId - The id of the asset on Cesium ion.
  */
-class C3DTilesIonSource extends C3DTilesSource {
+class C3DTilesIonSource extends Source {
     /**
      * Create a new Source for 3D Tiles data from Cesium ion.
      *
@@ -52,7 +53,26 @@ class C3DTilesIonSource extends C3DTilesSource {
                 this.networkOptions.headers = {};
                 this.networkOptions.headers.Authorization = `Bearer ${json.accessToken}`;
                 this.attribution = json.attributions;
-                return Fetcher.json(this.url, this.networkOptions);
+                this.view = source.view;
+
+                return Loader3DTiles.load({
+                    url: this.url,
+                    renderer: source.view.mainLoop.gfxEngine.renderer,
+                    onProgress: (a, b) => {
+                        if (a < b) {
+                            this.view.notifyChange(this, true);
+                        }
+                    },
+                    options: {
+                        cesiumIONToken: this.accessToken,
+                        dracoDecoderPath: 'https://cdn.jsdelivr.net/npm/three@0.146.0/examples/js/libs/draco',
+                        basisTranscoderPath: 'https://cdn.jsdelivr.net/npm/three@0.146.0/examples/js/libs/basis',
+                        // maximumScreenSpaceError: 0.05,
+                        geoTransform: 3,
+                        debug: true,
+                        maximumMemoryUsage: 1024,
+                    },
+                });
             });
     }
 }

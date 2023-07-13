@@ -66,7 +66,8 @@
     "pbf": "^3.2.1",
     "regenerator-runtime": "^0.13.11",
     "shpjs": "^4.0.4",
-    "text-encoding-utf-8": "^1.0.2"
+    "text-encoding-utf-8": "^1.0.2",
+    "three-loader-3dtiles": "github:mgermerie/three-loader-3dtiles#update-packages"
   },
   "peerDependencies": {
     "proj4": "^2.8.0",
