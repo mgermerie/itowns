@@ -1,4 +1,4 @@
-import { Loader3DTiles } from 'ThreeExtended/three-loader-3dtiles';
+import { Loader3DTiles } from 'three-loader-3dtiles';
 import Fetcher from 'Provider/Fetcher';
 import Source from 'Source/Source';
 

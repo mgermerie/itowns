@@ -1,6 +1,6 @@
 import Source from 'Source/Source';
 // import Fetcher from 'Provider/Fetcher';
-import { Loader3DTiles } from 'ThreeExtended/three-loader-3dtiles';
+import { Loader3DTiles } from 'three-loader-3dtiles';
 
 const GeoTransform = {
     Reset: 1,
