@@ -13,7 +13,7 @@ on:
 jobs:
 
   # Build bundle, doc and run tests (unit, functional and coverage)
-  tests:
+  build:
     name: Build and test validation
     runs-on: ubuntu-latest
     steps:
@@ -43,22 +43,6 @@ jobs:
         if: ${{ success() }}
         run: npm run build
 
-      # Run unit tests
-      - name: Unit tests
-        run: npm run test-with-coverage_lcov
-
-      # Run functional tests
-      # TODO: functional tests don't stop if one fails
-      - name: Functional tests
-        if: ${{ success() }}
-        run: npm run test-functional
-
-      # Code coverage
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-
       # Build documentation
       - name: Build documentation
         if: ${{ success() && github.ref == 'refs/heads/master' }}
@@ -75,12 +59,53 @@ jobs:
                 examples
                 buildDocs
 
+  # Code coverage
+  code-coverage:
+    name: Coveralls
+    runs-on: ubuntu-latest
+    uses: coverallsapp/github-action@master
+    with:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  # Unit tests
+  unit-tests:
+    name: Unit tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+
+      # Use specific Node.js version
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Run unit tests
+        run: npm run test-with-coverage_lcov
+
+  # Functional tests
+  functional-tests:
+    name: Unit tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+
+      # Use specific Node.js version
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Run functional tests
+        run: npm run test-functional
 
   # Publish NPM package
   publish:
     name: Publish NPM package
     if: ${{ github.ref == 'refs/heads/master' }}
-    needs: tests
+    needs: [unit-tests, functional-tests, code-coverage]
     runs-on: ubuntu-latest
     steps:
 
@@ -131,7 +156,7 @@ jobs:
   deploy:
     name: Deploy to itowns.github.io
     if: ${{ github.ref == 'refs/heads/master' }}
-    needs: tests
+    needs: [unit-tests, functional-tests, code-coverage]
     runs-on: ubuntu-latest
     steps:
 
@@ -192,7 +217,7 @@ jobs:
   release:
     name: Release GitHub
     if: ${{ github.ref == 'refs/heads/master' && startsWith( github.event.head_commit.message, 'release v' ) }}
-    needs: tests
+    needs: [unit-tests, functional-tests, code-coverage]
     runs-on: ubuntu-latest
     steps:
 
