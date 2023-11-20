@@ -1,0 +1,226 @@
+<html>
+    <head>
+        <title>Itowns - Loaders.gl</title>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" type="text/css" href="css/example.css">
+        <link rel="stylesheet" type="text/css" href="css/LoadingScreen.css">
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js"></script>
+    </head>
+    <body>
+        <div id="viewerDiv"></div>
+
+        <div id="description">
+            <p>Existing dataset :</p>
+            <ul>
+                <li>
+                    <a href='?dataset=b3dm-simple'>
+                        b3dm-simple
+                    </a>
+                </li>
+                <li>
+                    <a href='?dataset=b3dm-request-volume'>
+                        b3dm-request-volume
+                    </a>
+                </li>
+                <li>
+                    <a href='?dataset=b3dm-batch-table'>
+                        b3dm-batch-table
+                    </a>
+                </li>
+                <li>
+                    <a href='?dataset=b3dm-batch-table-hierarchy'>
+                        b3dm-batch-table-hierarchy
+                    </a>
+                </li>
+                <li>
+                    <a href='?dataset=pnts'>
+                        pnts
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Import iTowns source code -->
+        <script src="../dist/itowns.js"></script>
+        <script src="../dist/debug.js"></script>
+        <!-- Import iTowns LoadingScreen and GuiTools plugins -->
+        <script src="js/GUI/GuiTools.js"></script>
+
+
+        <script type="text/javascript">
+
+
+
+            // ---------- DATASETS TO TEST : ----------
+
+            const registeredDataset = {
+                'b3dm-simple': {
+                    layer: {
+                        source: {
+                            url: 'https://raw.githubusercontent.com/CesiumGS/'
+                                + '3d-tiles-samples/main/1.0/'
+                                + 'TilesetWithDiscreteLOD/tileset.json',
+                        },
+                    },
+                    placement: {
+                        coord: new itowns.Coordinates(
+                            'EPSG:4326', -75.6114, 40.03428,
+                        ),
+                        range: 4000,
+                        tilt: 22,
+                        heading: 180,
+                    },
+                },
+                'b3dm-request-volume': {
+                    layer: {
+                        source: {
+                            url: 'https://raw.githubusercontent.com/CesiumGS/'
+                                + '3d-tiles-samples/master/1.0/'
+                                + 'TilesetWithRequestVolume/tileset.json',
+                        },
+                    },
+                    placement: {
+                        coord: new itowns.Coordinates(
+                            'EPSG:4326', -75.6114, 40.03428,
+                        ),
+                        range: 4000,
+                        tilt: 22,
+                        heading: 180,
+                    },
+                },
+                'b3dm-batch-table-hierarchy': {
+                    layer: {
+                        source: {
+                            url: 'https://raw.githubusercontent.com/'
+                                + 'AnalyticalGraphicsInc/cesium/master/Apps/'
+                                + 'SampleData/Cesium3DTiles/Hierarchy/'
+                                + 'BatchTableHierarchy/tileset.json',
+                        }
+                    },
+                    placement: {
+                        coord: new itowns.Coordinates(
+                            'EPSG:4326', -75.61349, 40.044259,
+                        ),
+                        range: 200,
+                        tilt: 10,
+                        heading: 145,
+                    },
+                },
+                'b3dm-batch-table': {
+                    layer: {
+                        source: {
+                            url: 'https://raw.githubusercontent.com/CesiumGS/'
+                                + 'cesium/'
+                                + '87d639542f5858dc42a090b8034819e33bf4afa6/'
+                                + 'Apps/SampleData/Cesium3DTiles/Batched/'
+                                + 'BatchedWithBatchTable/tileset.json',
+                        }
+                    },
+                    placement: {
+                        coord: new itowns.Coordinates(
+                            'EPSG:4326', -75.61349, 40.044259,
+                        ),
+                        range: 200,
+                        tilt: 10,
+                        heading: 145,
+                    },
+                },
+                'pnts': {
+                    layer: {
+                        source: {
+                            url: 'https://raw.githubusercontent.com/iTowns/'
+                                + 'iTowns2-sample-data/master/pointclouds/'
+                                + 'pnts-sete-2021-0756_6256/tileset.json',
+                        },
+                        sseThreshold: 5,
+                    },
+                    placement: {
+                        coord: new itowns.Coordinates(
+                            'EPSG:4326', 3.695885, 43.397379,
+                        ),
+                        range: 3000,
+                        tilt: 55,
+                        heading: 180,
+                    },
+                },
+            };
+
+
+
+            // ---------- GET DATASET FROM URL : ----------
+
+            const dataset = {};
+            const inputUrl = new URLSearchParams(window.location.search)
+                .get('dataset');
+
+            function isValidUrl (urlString) {
+                try { return Boolean(new URL(urlString)) } 
+                catch (e) { return false }
+            }
+            if (isValidUrl(inputUrl)) {
+                Object.assign(
+                    dataset,
+                    { layer: { source: { url: inputUrl } } },
+                );
+            } else if (registeredDataset[inputUrl]) {
+                Object.assign(dataset, registeredDataset[inputUrl]);
+            } else {
+                // default url and placement
+                Object.assign(
+                    dataset,
+                    registeredDataset['b3dm-simple'],
+                );
+            }
+
+
+
+            // ---------- CREATE A GlobeView FOR SUPPORTING DATA VISUALIZATION : ----------
+
+            const viewerDiv = document.getElementById('viewerDiv');
+
+            const view = new itowns.GlobeView(
+                viewerDiv,
+                dataset.placement,
+            );
+
+            const debugMenu = new GuiTools('menuDiv', view);
+
+
+
+            // ---------- ADD 3D TILES : ----------
+
+            dataset.layer.source = new itowns.C3DTilesSource(
+                dataset.layer.source,
+            );
+
+            // const extensions = new itowns.C3DTExtensions();
+            // extensions.registerExtension(
+            //     "3DTILES_batch_table_hierarchy",
+            //     { [itowns.C3DTilesTypes.batchtable]:
+            //         itowns.C3DTBatchTableHierarchyExtension },
+            // );
+
+            const C3DTilesLayer = new itowns.C3DTilesLayer(
+                '3d-tiles-layer',
+                dataset.layer,
+                view,
+            );
+
+            itowns.View.prototype.addLayer.call(view, C3DTilesLayer);
+
+
+
+            // ---------- DEBUG TOOLS : ----------
+
+            debug.createTileDebugUI(debugMenu.gui, view);
+            debug.create3dTilesDebugUI(debugMenu.gui, view, C3DTilesLayer);
+
+
+
+        </script>
+    </body>
+</html>
