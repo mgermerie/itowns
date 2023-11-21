@@ -34,6 +34,7 @@ class C3DTileset {
     constructor(json, baseURL, registeredExtensions) {
         this.type = C3DTilesTypes.tileset;
 
+        this.loader = json.loader;
         this.asset = json.asset;
         this.properties = json.properties;
         this.geometricError = json.geometricError;
@@ -112,3 +113,50 @@ class C3DTileset {
 }
 
 export default C3DTileset;
+
+export function parseTiles(tileset, tile, baseURL, parent, registeredExtensions) {
+    // compute transform (will become Object3D.matrix when the object is
+    // downloaded)
+    tile.transform =
+        tile.transform ? (new THREE.Matrix4()).fromArray(tile.transform) :
+            undefined;
+
+    // The only reason to store _worldFromLocalTransform is because of
+    // extendTileset where we need the transform chain for one tile.
+    tile._worldFromLocalTransform = tile.transform;
+    if (parent && parent._worldFromLocalTransform) {
+        if (tile.transform) {
+            tile._worldFromLocalTransform =
+                new THREE.Matrix4().multiplyMatrices(
+                    parent._worldFromLocalTransform, tile.transform);
+        } else {
+            tile._worldFromLocalTransform = parent._worldFromLocalTransform;
+        }
+    }
+
+    // tileMatrixInverse is only used for volume.region
+    if ((tile.viewerRequestVolume && tile.viewerRequestVolume.region)
+        || (tile.boundingVolume && tile.boundingVolume.region)) {
+        if (tile._worldFromLocalTransform) {
+            tileMatrixInverse.copy(tile._worldFromLocalTransform).invert();
+        } else {
+            tileMatrixInverse.identity();
+        }
+    }
+
+    tile.viewerRequestVolume = tile.viewerRequestVolume ?
+        new C3DTBoundingVolume(tile.viewerRequestVolume, tileMatrixInverse, registeredExtensions) : null;
+    tile.boundingVolume = tile.boundingVolume ?
+        new C3DTBoundingVolume(tile.boundingVolume, tileMatrixInverse, registeredExtensions) : null;
+
+    tileset.tiles.push(tile);
+    tile.tileId = tileset.tiles.length - 1;
+
+    tile.baseURL = baseURL;
+    if (tile.children) {
+        for (const child of tile.children) {
+            parseTiles(tileset, child, baseURL, tile, registeredExtensions);
+        }
+    }
+}
+

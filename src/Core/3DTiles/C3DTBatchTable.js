@@ -138,3 +138,31 @@ class C3DTBatchTable {
 }
 
 export default C3DTBatchTable;
+
+
+export function getInfoFromBatchTable(batchTable, batchId) {
+    // TODO: add error management when batchId is off limit.
+
+    const featureDisplayableInfo = {
+        batchTable: {},
+    };
+
+    // Get properties from batch table content
+    const propertiesList = batchTable.getPropertyNames(batchId);
+    for (const property in propertiesList) {
+        if (Object.prototype.hasOwnProperty.call(propertiesList, property)) {
+            const value = batchTable.getProperty(batchId, property);
+            if (
+                value && (value.isVector2 || value.isVector3 || value.isVector4)
+            ) {
+                featureDisplayableInfo.batchTable[property] = value.toArray();
+            } else {
+                featureDisplayableInfo.batchTable[property] = value;
+            }
+        }
+    }
+
+    // Extensions
+
+    console.log(batchTable.getPropertyNames(batchId));
+}

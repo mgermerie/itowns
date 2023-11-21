@@ -1,5 +1,7 @@
 import Source from 'Source/Source';
-import Fetcher from 'Provider/Fetcher';
+// import Fetcher from 'Provider/Fetcher';
+import { load } from '@loaders.gl/core';
+import { Tiles3DLoader } from '@loaders.gl/3d-tiles';
 
 /**
  * @classdesc
@@ -26,7 +28,12 @@ class C3DTilesSource extends Source {
         super(source);
         this.isC3DTilesSource = true;
         this.baseUrl = this.url.slice(0, this.url.lastIndexOf('/') + 1);
-        this.whenReady = Fetcher.json(this.url, this.networkOptions);
+        // this.whenReady = Fetcher.json(this.url, this.networkOptions);
+        this.whenReady = load(
+            this.url,
+            Tiles3DLoader,
+            { '3d-tiles': { isTileset: true } },
+        );
     }
 }
 

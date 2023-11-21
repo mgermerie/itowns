@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import GeometryLayer from 'Layer/GeometryLayer';
 import { init3dTilesLayer, pre3dTilesUpdate, process3dTilesNode } from 'Process/3dTilesProcessing';
-import C3DTileset from 'Core/3DTiles/C3DTileset';
+import C3DTileset, { parseTiles } from 'Core/3DTiles/C3DTileset';
 import C3DTExtensions from 'Core/3DTiles/C3DTExtensions';
 import { PNTS_MODE, PNTS_SHAPE, PNTS_SIZE_MODE } from 'Renderer/PointsMaterial';
 // eslint-disable-next-line no-unused-vars
 import Style from 'Core/Style';
 import C3DTFeature from 'Core/3DTiles/C3DTFeature';
+import { getInfoFromBatchTable } from 'Core/3DTiles/C3DTBatchTable';
 import { optimizeGeometryGroups } from 'Utils/ThreeUtils';
 
 export const C3DTILES_LAYER_EVENTS = {
@@ -172,7 +173,22 @@ class C3DTilesLayer extends GeometryLayer {
         const resolve = this.addInitializationStep();
 
         this.source.whenReady.then((tileset) => {
-            this.tileset = new C3DTileset(tileset, this.source.baseUrl, this.registeredExtensions);
+            // this.tileset = new C3DTileset(tileset, this.source.baseUrl, this.registeredExtensions);
+
+            // TODO: could find a workarond this.
+            tileset.tiles = [];
+
+            parseTiles(
+                tileset,
+                tileset.root,
+                this.source.baseUrl,
+                undefined,  // parent
+                this.registeredExtensions,
+            );
+            this.tileset = tileset;
+
+            console.log('Tileset : ', this.tileset);
+
             // Verify that extensions of the tileset have been registered in the layer
             if (this.tileset.extensionsUsed) {
                 for (const extensionUsed of this.tileset.extensionsUsed) {
@@ -181,8 +197,8 @@ class C3DTilesLayer extends GeometryLayer {
                         // if it is required to load the tileset
                         if (this.tileset.extensionsRequired &&
                             this.tileset.extensionsRequired.includes(extensionUsed)) {
-                            console.error(
-                                `3D Tiles tileset required extension "${extensionUsed}" must be registered to the 3D Tiles layer of iTowns to be parsed and used.`);
+                            // console.error(
+                            //     `3D Tiles tileset required extension "${extensionUsed}" must be registered to the 3D Tiles layer of iTowns to be parsed and used.`);
                         } else {
                             console.warn(
                                 `3D Tiles tileset used extension "${extensionUsed}" must be registered to the 3D Tiles layer of iTowns to be parsed and used.`);
@@ -324,6 +340,10 @@ class C3DTilesLayer extends GeometryLayer {
                         });
                     } else {
                         // first occurence
+                        const toto = getInfoFromBatchTable(
+                            batchTable,
+                            currentBatchId,
+                        );
                         const c3DTileFeature = new C3DTFeature(
                             tileContent.tileId,
                             currentBatchId,
