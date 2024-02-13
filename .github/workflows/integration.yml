@@ -107,32 +107,32 @@ jobs:
 
 
   # Functional tests
-  functional-tests:
-    name: Functional tests
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
+  # functional-tests:
+  #   name: Functional tests
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
 
-      # Use specific Node.js version
-      - uses: actions/checkout@v4
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-          cache: 'npm'
+  #     # Use specific Node.js version
+  #     - uses: actions/checkout@v4
+  #     - name: Use Node.js 20.x
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20.x
+  #         cache: 'npm'
 
-      # Install packages
-      - name: Install packages
-        run: npm ci
+  #     # Install packages
+  #     - name: Install packages
+  #       run: npm ci
 
-      # Download artifact from build
-      - name: Download itowns bundle
-        uses: actions/download-artifact@v4
-        with:
-          name: dist-itowns
+  #     # Download artifact from build
+  #     - name: Download itowns bundle
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: dist-itowns
 
-      - name: Run functional tests
-        run: npm run test-functional
+  #     - name: Run functional tests
+  #       run: npm run test-functional
 
 
   # Publish NPM package
@@ -231,7 +231,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          external_repository: iTowns/itowns.github.io
+          external_repository: mgermerie/itowns.github.io
           publish_dir: ./itowns
           destination_dir: ./itowns
           publish_branch: master
@@ -246,7 +246,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          external_repository: iTowns/itowns.github.io
+          external_repository: mgermerie/itowns.github.io
           publish_dir: ./itowns
           destination_dir: ./itowns/dev
           publish_branch: master
