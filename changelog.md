@@ -1,3 +1,20 @@
+<a name="2.43.0"></a>
+# [2.43.0](https://github.com/mgermerie/itowns/compare/v2.42.0...v2.43.0) (2024-02-13)
+
+
+### Examples
+
+* **ept:** Allow navigation on the pointcloud ([ec7ae6c](https://github.com/mgermerie/itowns/commit/ec7ae6c))
+
+
+### Workflow and chores
+
+* release v2.43.0 ([7f15543](https://github.com/mgermerie/itowns/commit/7f15543))
+* **temporary:** test deployment ([4b8d977](https://github.com/mgermerie/itowns/commit/4b8d977))
+* **workflow:** update GitHub actions to use Node.js 20 ([179d7a0](https://github.com/mgermerie/itowns/commit/179d7a0))
+
+
+
 <a name="2.42.0"></a>
 # [2.42.0](https://github.com/iTowns/itowns/compare/v2.41.0...v2.42.0) (2024-02-05)
 
