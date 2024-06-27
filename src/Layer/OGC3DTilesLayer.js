@@ -8,6 +8,21 @@ import PointsMaterial from 'Renderer/PointsMaterial';
 import ReferLayerProperties from 'Layer/ReferencingLayerProperties';
 
 
+export const OGC_3DTILES_EVENTS = {
+    /**
+     * Fires when a tile content has been loaded
+     *
+     * @event OGC3DTilesLayer#on-tile-content-loaded
+     * @type {object}
+     *
+     * @property {THREE.Object3D} tileContent - An Object3D parsed from tile's
+     * data. It contains a `batchTable` property which grants access to the
+     * BatchTable of the tile.
+     */
+    ON_TILE_CONTENT_LOADED: 'on-tile-content-loaded',
+};
+
+
 /*
  * A callback to execute for a givent tile of a tileset associated with an
  * {@link OGC3DTilesLayer}.
@@ -113,6 +128,12 @@ class OGC3DTilesLayer extends GeometryLayer {
             if (model.isPoints) {
                 this._replacePointsMaterial(model);
             }
+
+            this.dispatchEvent({
+                type: OGC_3DTILES_EVENTS.ON_TILE_CONTENT_LOADED,
+                tileContent: model,
+            });
+
             view.notifyChange(this);
         };
     }
