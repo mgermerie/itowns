@@ -38,6 +38,18 @@ export const OGC_3DTILES_EVENTS = {
 */
 
 
+export function getBatchTableDataForBatchId(batchTable, batchId) {
+    const batchTableData = {};
+
+    batchTable.getKeys().forEach((key) => {
+        if (key === 'extensions') { return; }
+        batchTableData[key] = batchTable.getData(key)[batchId];
+    });
+
+    return batchTableData;
+}
+
+
 // Internal instance of GLTFLoader, passed to 3d-tiles-renderer-js to support GLTF 1.0 and 2.0
 // Temporary exported to be used in deprecated B3dmParser
 export const itownsGLTFLoader = new iGLTFLoader();

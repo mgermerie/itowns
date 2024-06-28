@@ -56,30 +56,57 @@
                     itowns.C3DTBatchTableHierarchyExtension });
 
             // Create the 3D Tiles layer
-            var $3dTilesLayerBTHierarchy = new itowns.OGC3DTilesLayer(
+            var $3dTilesLayerBTHierarchy = new itowns.C3DTilesLayer(
+            // var $3dTilesLayerBTHierarchy = new itowns.OGC3DTilesLayer(
                 '3d-tiles-bt-hierarchy', {
                     name: 'BTHierarchy',
-                    source: new itowns.OGC3DTilesSource({
+                    source: new itowns.C3DTilesSource({
+                    // source: new itowns.OGC3DTilesSource({
                         url: 'https://raw.githubusercontent.com/AnalyticalGraphicsInc/cesium/master/Apps/SampleData/Cesium3DTiles/Hierarchy/BatchTableHierarchy/tileset.json',
                     }),
                     registeredExtensions: extensions,
+                }, view);
+
+            $3dTilesLayerBTHierarchy.addEventListener(
+                itowns.C3DTILES_LAYER_EVENTS.ON_TILE_CONTENT_LOADED,
+                (event) => {
+                    console.log(event.tileContent.batchTable.getInfoById(0));
+                },
+            );
+            
+
+
+
+            itowns.View.prototype.addLayer.call(view, $3dTilesLayerBTHierarchy);
+
+            function toto() {
+                $3dTilesLayerBTHierarchy.forEachTile((tile, scene) => {
+                    console.log(tile, scene);
+                    console.log(itowns.getBatchTableDataForBatchId(
+                        scene.batchTable,
+                        0,
+                    ));
                 });
+            }
+
+
+
 
             // add an event for picking the 3D Tiles layer and displaying
             // information about the picked feature in an html div
-            var pickingArgs = {};
-            pickingArgs.htmlDiv = document.getElementById('featureInfo');
-            pickingArgs.view = view;
-            pickingArgs.layer = $3dTilesLayerBTHierarchy;
-            itowns.View.prototype.addLayer.call(view, $3dTilesLayerBTHierarchy).then(function _() {
-                window.addEventListener('mousemove',
-                    (event) => fillHTMLWithPickingInfo(event, pickingArgs),false);
-            });
+            // var pickingArgs = {};
+            // pickingArgs.htmlDiv = document.getElementById('featureInfo');
+            // pickingArgs.view = view;
+            // pickingArgs.layer = $3dTilesLayerBTHierarchy;
+            // itowns.View.prototype.addLayer.call(view, $3dTilesLayerBTHierarchy).then(function _() {
+            //     window.addEventListener('mousemove',
+            //         (event) => fillHTMLWithPickingInfo(event, pickingArgs),false);
+            // });
 
-            // Add a debug UI
-            var d = new debug.Debug(view, menuGlobe.gui);
-            debug.createTileDebugUI(menuGlobe.gui, view, view.tileLayer, d);
-            debug.create3dTilesDebugUI(menuGlobe.gui, view, $3dTilesLayerBTHierarchy);
+            // // Add a debug UI
+            // var d = new debug.Debug(view, menuGlobe.gui);
+            // debug.createTileDebugUI(menuGlobe.gui, view, view.tileLayer, d);
+            // debug.create3dTilesDebugUI(menuGlobe.gui, view, $3dTilesLayerBTHierarchy);
         </script>
     </body>
 </html>
