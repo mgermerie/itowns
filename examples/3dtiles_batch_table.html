@@ -49,37 +49,21 @@
                         .then(menuGlobe.addLayerGUI.bind(menuGlobe));
                 });
 
-	        // Create a new 3D tiles layer with batch table hierarchy extension
-            const extensions = new itowns.C3DTExtensions();
-            extensions.registerExtension("3DTILES_batch_table_hierarchy",
-                { [itowns.C3DTilesTypes.batchtable]:
-                    itowns.C3DTBatchTableHierarchyExtension });
-
             // Create the 3D Tiles layer
-            var $3dTilesLayerBTHierarchy = new itowns.OGC3DTilesLayer(
+            var ogc3DTilesLayer = new itowns.OGC3DTilesLayer(
                 '3d-tiles-bt-hierarchy', {
                     name: 'BTHierarchy',
                     source: new itowns.OGC3DTilesSource({
                         url: 'https://raw.githubusercontent.com/AnalyticalGraphicsInc/cesium/master/Apps/SampleData/Cesium3DTiles/Hierarchy/BatchTableHierarchy/tileset.json',
                     }),
-                    registeredExtensions: extensions,
                 });
 
-            // add an event for picking the 3D Tiles layer and displaying
-            // information about the picked feature in an html div
-            var pickingArgs = {};
-            pickingArgs.htmlDiv = document.getElementById('featureInfo');
-            pickingArgs.view = view;
-            pickingArgs.layer = $3dTilesLayerBTHierarchy;
-            itowns.View.prototype.addLayer.call(view, $3dTilesLayerBTHierarchy).then(function _() {
-                window.addEventListener('mousemove',
-                    (event) => fillHTMLWithPickingInfo(event, pickingArgs),false);
+            view.addLayer(ogc3DTilesLayer);
+
+            ogc3DTilesLayer.addEventListener('load-model', (event) => {
+                console.log(event.scene.batchTable.getDataFromId(3));
             });
 
-            // Add a debug UI
-            var d = new debug.Debug(view, menuGlobe.gui);
-            debug.createTileDebugUI(menuGlobe.gui, view, view.tileLayer, d);
-            debug.create3dTilesDebugUI(menuGlobe.gui, view, $3dTilesLayerBTHierarchy);
         </script>
     </body>
 </html>
