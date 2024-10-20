@@ -7,7 +7,7 @@ import GpxParser from 'Parser/GpxParser';
 import GTXParser from 'Parser/GTXParser';
 import ISGParser from 'Parser/ISGParser';
 import VectorTileParser from 'Parser/VectorTileParser';
-import Fetcher from 'Provider/Fetcher';
+import Fetcher, { getFetcher } from 'Provider/Fetcher';
 import Cache from 'Core/Scheduler/Cache';
 
 /** @private */
@@ -116,7 +116,7 @@ class Source extends InformationsData {
 
         this.url = source.url;
         this.format = source.format;
-        this.fetcher = source.fetcher || Fetcher.get(source.format);
+        this.fetcher = source.fetcher || getFetcher(source.format);
         this.parser = source.parser || supportedParsers.get(source.format) || ((d, opt) => { d.extent = opt.extent; return d; });
         this.isVectorSource = (source.parser || supportedParsers.get(source.format)) != undefined;
         this.networkOptions = source.networkOptions || { crossOrigin: 'anonymous' };
