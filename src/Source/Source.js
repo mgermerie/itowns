@@ -3,12 +3,14 @@ import Extent from 'Core/Geographic/Extent';
 import GeoJsonParser from 'Parser/GeoJsonParser';
 import KMLParser from 'Parser/KMLParser';
 import GDFParser from 'Parser/GDFParser';
+import GeotiffParser from 'Parser/GeotiffParser';
 import GpxParser from 'Parser/GpxParser';
 import GTXParser from 'Parser/GTXParser';
 import ISGParser from 'Parser/ISGParser';
 import VectorTileParser from 'Parser/VectorTileParser';
 import Fetcher from 'Provider/Fetcher';
 import Cache from 'Core/Scheduler/Cache';
+
 
 /** @private */
 export const supportedParsers = new Map([
@@ -20,6 +22,7 @@ export const supportedParsers = new Map([
     ['application/gtx', GTXParser.parse],
     ['application/isg', ISGParser.parse],
     ['application/gdf', GDFParser.parse],
+    ['image/geotiff', GeotiffParser.parse],
 ]);
 
 const noCache = { getByArray: () => {}, setByArray: a => a, clear: () => {} };
@@ -133,6 +136,7 @@ class Source extends InformationsData {
     }
 
     handlingError(err) {
+        // debugger; // eslint-disable-line no-debugger
         throw new Error(err);
     }
 

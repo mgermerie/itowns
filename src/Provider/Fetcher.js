@@ -1,4 +1,6 @@
 import { TextureLoader, DataTexture, RedFormat, FloatType } from 'three';
+import { fromUrl } from 'geotiff';
+
 
 const textureLoader = new TextureLoader();
 const SIZE_TEXTURE_TILE = 256;
@@ -202,6 +204,12 @@ export default {
         });
     },
 
+    geotiff(url) {
+        // TODO: add options to geotiff fetcher
+        console.log('url : ', url);
+        return fromUrl(url);
+    },
+
     get(format = '') {
         const [type, subtype] = format.split('/');
         switch (type) {
@@ -225,6 +233,8 @@ export default {
                 switch (subtype) {
                     case 'x-bil;bits=32':
                         return this.textureFloat;
+                    case 'geotiff':
+                        return this.geotiff;
                     default:
                         return this.texture;
                 }

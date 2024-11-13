@@ -1,0 +1,70 @@
+<html>
+    <head>
+        <title>Test tiff</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="css/example.css">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js"></script>
+    </head>
+    <body>
+        <div id="viewerDiv"></div>
+
+        <script src="../dist/itowns.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/geotiff"></script>
+        <script src="js/plugins/COGParser.js"></script>
+
+        <script type="text/javascript">
+
+            const placement = {
+                coord: new itowns.Coordinates('EPSG:4326', -0.926061837, 45.988156177),
+                range: 20000000,
+            };
+            const viewerDiv = document.getElementById('viewerDiv');
+            const view = new itowns.GlobeView(viewerDiv, placement);
+
+            const promises = [];
+
+            // promises.push(
+            //     itowns.Fetcher.json('./layers/JSONLayers/Ortho.json').then(function _(config) {
+            //         config.source = new itowns.WMTSSource(config.source);
+            //         view.addLayer(new itowns.ColorLayer('Ortho', config));
+            //     }),
+            // );
+
+
+            // ---------- DISPLAY TIFF AS COLORLAYER : ----------
+
+            const sourceExtent = new itowns.Extent(
+                'EPSG:4326',
+                -1.57046, 2.80335,
+                45.3839, 51.0937,
+            );
+            const tifSource = new itowns.WMSSource({
+                extent: sourceExtent,
+                // name: 'IGNF_LIDAR-HD_MNS',
+                name: 'IGNF_LIDAR-HD_MNH',
+                url: 'https://data.geopf.fr/wms-r',
+                version: '1.3.0',
+                crs: 'EPSG:4326',
+                format: 'image/geotiff',
+            });
+
+            const tifLayer = new itowns.ColorLayer('tiff', {
+                source: tifSource,
+            });
+
+            promises.push(
+                view.addLayer(tifLayer),
+            );
+            view.addEventListener(itowns.GLOBE_VIEW_EVENTS.GLOBE_INITIALIZED, function () {
+                Promise.all(promises).then(() => {
+                    itowns.ColorLayersOrdering.moveLayerToIndex(view, 'Ortho', 0);
+                    itowns.ColorLayersOrdering.moveLayerToIndex(view, 'tiff', 1);
+                });
+            });
+
+        </script>
+    </body>
+</html>
