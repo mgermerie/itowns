@@ -206,7 +206,7 @@ export default {
 
     geotiff(url) {
         // TODO: add options to geotiff fetcher
-        console.log('url : ', url);
+        // console.log('url : ', url);
         return fromUrl(url);
     },
 

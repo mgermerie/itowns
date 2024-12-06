@@ -19,7 +19,7 @@
 
             const placement = {
                 coord: new itowns.Coordinates('EPSG:4326', -0.926061837, 45.988156177),
-                range: 20000000,
+                range: 20000,
             };
             const viewerDiv = document.getElementById('viewerDiv');
             const view = new itowns.GlobeView(viewerDiv, placement);
@@ -58,9 +58,10 @@
             promises.push(
                 view.addLayer(tifLayer),
             );
+
             view.addEventListener(itowns.GLOBE_VIEW_EVENTS.GLOBE_INITIALIZED, function () {
                 Promise.all(promises).then(() => {
-                    itowns.ColorLayersOrdering.moveLayerToIndex(view, 'Ortho', 0);
+                    // itowns.ColorLayersOrdering.moveLayerToIndex(view, 'Ortho', 0);
                     itowns.ColorLayersOrdering.moveLayerToIndex(view, 'tiff', 1);
                 });
             });

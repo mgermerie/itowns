@@ -136,6 +136,7 @@ class Source extends InformationsData {
     }
 
     handlingError(err) {
+        console.log(err.totoURL);
         // debugger; // eslint-disable-line no-debugger
         throw new Error(err);
     }
@@ -175,7 +176,10 @@ class Source extends InformationsData {
             features = cache.setByArray(
                 this.fetcher(this.urlFromExtent(extent), this.networkOptions)
                     .then(file => this.parser(file, { out, in: this, extent }))
-                    .catch(err => this.handlingError(err)),
+                    .catch((err) => {
+                        err.totoURL = this.urlFromExtent(extent);
+                        return this.handlingError(err);
+                    }),
                 key);
 
             /* istanbul ignore next */
