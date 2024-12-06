@@ -121,7 +121,7 @@ class Source extends InformationsData {
         this.url = source.url;
         this.format = source.format;
         this.fetcher = source.fetcher || Fetcher.get(source.format);
-        this.parser = source.parser || supportedParsers.get(source.format) || ((d, opt) => { d.extent = opt.extent; return d; });
+        this.parser = source.parser || supportedParsers.get(source.format) || (d => d);
         this.isVectorSource = (source.parser || supportedParsers.get(source.format)) != undefined;
         this.networkOptions = source.networkOptions || { crossOrigin: 'anonymous' };
         this.attribution = source.attribution;
