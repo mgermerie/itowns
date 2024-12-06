@@ -1,5 +1,25 @@
 import type { GeoTIFFImage, ReadRasterResult } from 'geotiff';
-import { DataTexture, RGBAFormat, FloatType } from 'three';
+import { DataTexture, RGBAFormat, FloatType, UnsignedByteType } from 'three';
+
+
+/**
+ * @param format - Format to interpret each data sample in a pixel
+ * https://www.awaresystems.be/imaging/tiff/tifftags/sampleformat.html
+ * @param bitsPerSample - Number of bits per component.
+ * https://www.awaresystems.be/imaging/tiff/tifftags/bitspersample.html
+ */
+function selectDataType(format: number, bitsPerSample: number) {
+    switch (format) {
+        case 1: // unsigned integer data
+            if (bitsPerSample <= 8) {
+                return UnsignedByteType;
+            }
+            break;
+        default:
+            break;
+    }
+    return FloatType;
+}
 
 
 /**
@@ -12,10 +32,22 @@ import { DataTexture, RGBAFormat, FloatType } from 'three';
  */
 function convertToRGBA(
     buffer: ReadRasterResult,
-    newBuffer: ReadRasterResult,
+    dataType: number,
     defaultAlpha: number,
 ) {
     const { width, height } = buffer;
+
+    let newBuffer: ReadRasterResult;
+    switch (dataType) {
+        case UnsignedByteType:
+            newBuffer = new Uint8ClampedArray(width * height * 4);
+            break;
+        case FloatType:
+            newBuffer = new Float32Array(width * height * 4);
+            break;
+        default:
+            throw new Error('unsupported data type');
+    }
 
     for (let i = 0; i < width * height; i++) {
         const oldIndex = i * 3;
@@ -35,19 +67,21 @@ function convertToRGBA(
 }
 
 
-async function parse(data: GeoTIFFImage) {
+async function parse(data: GeoTIFFImage, options) {
     const image = await data.getImage();
+
+    const dataType = selectDataType(image.getSampleFormat(), image.getBitsPerSample());
+
     const width = image.getTileWidth();
     const height = image.getTileHeight();
-    const pixelCount = width * height;
 
-    let rgbBuffer = await <ReadRasterResult>image.readRGB();
-    if (!(pixelCount * 4 === rgbBuffer.byteLength)) {
-        rgbBuffer = convertToRGBA(
-            rgbBuffer,
-            new Float32Array(pixelCount * 4),
-            1,
-        );
+    let rgbBuffer = await <ReadRasterResult>image.readRasters({
+        interleave: true,
+    });
+
+    const isRGBA = width * height * 4 === rgbBuffer.byteLength;
+    if (!isRGBA) {
+        rgbBuffer = convertToRGBA(rgbBuffer, dataType, 1);
     }
 
     const texture = new DataTexture(
@@ -55,20 +89,21 @@ async function parse(data: GeoTIFFImage) {
         width,
         height,
         RGBAFormat,
-        FloatType,
+        dataType,
     );
 
-    console.log('image : ', image);
-    console.log('width : ', width);
-    console.log('height : ', height);
-    console.log('is RGB : ', pixelCount * 4 === rgbBuffer.byteLength);
-    console.log('format : ', image.getSampleFormat());
-    console.log('bitsPerSample : ', image.getBitsPerSample());
-    console.log('buffer : ', rgbBuffer);
-    console.log('texture : ', texture);
-    console.log('');
+    // console.log('image : ', image);
+    // console.log('width : ', width);
+    // console.log('height : ', height);
+    // console.log('is RGB : ', width * height * 4 === rgbBuffer.byteLength);
+    // console.log('format : ', image.getSampleFormat());
+    // console.log('bitsPerSample : ', image.getBitsPerSample());
+    // console.log('buffer : ', rgbBuffer);
+    // console.log('texture : ', texture);
+    // console.log('');
 
     texture.needsUpdate = true;
+    texture.extent = options.extent;
 
     return Promise.resolve(texture);
 }
