@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { STRATEGY_MIN_NETWORK_TRAFFIC } from 'Layer/LayerUpdateStrategy';
 import InfoLayer from 'Layer/InfoLayer';
-import Source from 'Source/Source';
 import Cache from 'Core/Scheduler/Cache';
 import Style from 'Core/Style';
 
@@ -49,9 +48,7 @@ class Layer extends THREE.EventDispatcher {
      * contains three elements `name, extent`, these elements will be
      * available using `layer.name` or something else depending on the property
      * name.
-     * @param {Source|boolean} config.source - instantiated Source specifies data source to display.
-     * if config.source is a boolean, it can only be false. if config.source is false,
-     * the layer doesn't need Source (like debug Layer or procedural layer).
+     * @param {Source} config.source - instantiated Source specifies data source to display.
      * @param {StyleOptions} [config.style] - an object that contain any properties
      * (order, zoom, fill, stroke, point, text or/and icon)
      * and sub properties of a Style (@see {@link StyleOptions}). Or directly a {@link Style} .<br/>
@@ -125,13 +122,13 @@ class Layer extends THREE.EventDispatcher {
          */
         this.name = name;
 
-        if (source === undefined || source === true) {
+        if (!source) {
             throw new Error(`Layer ${id} needs Source`);
         }
         /**
          * @type {Source}
          */
-        this.source = source || new Source({ url: 'none' });
+        this.source = source;
 
         this.crs = crs;
 

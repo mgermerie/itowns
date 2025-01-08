@@ -3,6 +3,7 @@ import GeometryLayer from 'Layer/GeometryLayer';
 import Coordinates from 'Core/Geographic/Coordinates';
 import { ellipsoidSizes } from 'Core/Math/Ellipsoid';
 import CoordStars from 'Core/Geographic/CoordStars';
+import Source from 'Source/Source';
 import Sky from './SkyShader';
 import skyFS from './Shaders/skyFS.glsl';
 import skyVS from './Shaders/skyVS.glsl';
@@ -47,8 +48,10 @@ class Atmosphere extends GeometryLayer {
     * @param {number} [options.mieScaleDepth] - not used.
     */
     constructor(id = 'atmosphere', options = {}) {
-        options.source = false;
-        super(id, new THREE.Object3D(), options);
+        super(id, new THREE.Object3D(), {
+            ...options,
+            source: new Source({ url: 'none' }),
+        });
         this.isAtmosphere = true;
 
         const material = new THREE.ShaderMaterial({

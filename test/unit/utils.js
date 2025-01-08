@@ -1,3 +1,6 @@
+import Source from 'Source/Source';
+import Fetcher from 'Provider/Fetcher';
+
 export function compareWithEpsilon(a, b, epsilon) {
     return a - epsilon < b && a + epsilon > b;
 }
@@ -21,4 +24,8 @@ export function obj2ArrayBuff(obj) {
     const objUtf8 = encoder.encode(objJSON);
     const objUint8 = new Uint8Array(objUtf8);
     return objUint8.buffer;
+}
+
+export function emptySource() {
+    return new Source({ url: 'none', fetcher: Fetcher.texture });
 }

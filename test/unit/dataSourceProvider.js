@@ -22,6 +22,7 @@ import Feature2Mesh from 'Converter/Feature2Mesh';
 import LayeredMaterial from 'Renderer/LayeredMaterial';
 import { EMPTY_TEXTURE_ZOOM } from 'Renderer/RasterTile';
 import sinon from 'sinon';
+import { emptySource } from './utils';
 
 import holes from '../data/geojson/holesPoints.geojson';
 
@@ -69,8 +70,8 @@ describe('Provide in Sources', function () {
             .callsFake(() => Promise.resolve(new THREE.Texture()));
 
         planarlayer = new PlanarLayer('globe', globalExtent, new THREE.Group());
-        colorlayer = new ColorLayer('color', { crs: 'EPSG:3857', source: false });
-        elevationlayer = new ElevationLayer('elevation', { crs: 'EPSG:3857', source: false });
+        colorlayer = new ColorLayer('color', { crs: 'EPSG:3857', source: emptySource() });
+        elevationlayer = new ElevationLayer('elevation', { crs: 'EPSG:3857', source: emptySource() });
 
         planarlayer.attach(colorlayer);
         planarlayer.attach(elevationlayer);
@@ -86,7 +87,7 @@ describe('Provide in Sources', function () {
             crs: 'EPSG:4978',
             mergeFeatures: false,
             zoom: { min: 10 },
-            source: false,
+            source: emptySource(),
             style: new Style({
                 fill: {
                     extrusion_height: 5000,

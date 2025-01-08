@@ -3,6 +3,7 @@ import View from 'Core/View';
 import GeometryLayer from 'Layer/GeometryLayer';
 import { C3DTilesBoundingVolumeTypes } from 'Core/3DTiles/C3DTilesEnums';
 import { PNTS_MODE, PNTS_SHAPE, PNTS_SIZE_MODE } from 'Renderer/PointsMaterial';
+import Source from 'Source/Source';
 import GeometryDebug from './GeometryDebug';
 
 const bboxMesh = new THREE.Mesh();
@@ -65,7 +66,7 @@ export default function create3dTilesDebugUI(datDebugTool, view, _3dTileslayer) 
     const boundingVolumeLayer = new GeometryLayer(boundingVolumeID, new THREE.Object3D(), {
         visible: false,
         cacheLifeTime: Infinity,
-        source: false,
+        source: new Source({ url: 'none' }),
     });
     boundingVolumeLayer.update = debugIdUpdate;
 

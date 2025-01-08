@@ -1,10 +1,11 @@
 import assert from 'assert';
 import Layer, { ImageryLayers } from 'Layer/Layer';
 import ColorLayer from 'Layer/ColorLayer';
+import { emptySource } from './utils';
 
 describe('Layer', function () {
     it('should emit an event on property changed', function () {
-        const layer = new Layer('testId', { source: false });
+        const layer = new Layer('testId', { source: emptySource() });
         layer.defineLayerProperty('test', 0);
         layer.addEventListener('test-property-changed', (e) => {
             assert.equal(e.type, 'test-property-changed');
@@ -17,10 +18,10 @@ describe('Layer', function () {
 
 describe('ImageryLayers', function () {
     const layers = [
-        new ColorLayer('l0', { source: false }),
-        new ColorLayer('l1', { source: false }),
-        new ColorLayer('l2', { source: false }),
-        new ColorLayer('l3', { source: false }),
+        new ColorLayer('l0', { source: emptySource() }),
+        new ColorLayer('l1', { source: emptySource() }),
+        new ColorLayer('l2', { source: emptySource() }),
+        new ColorLayer('l3', { source: emptySource() }),
     ];
 
     layers[0].sequence = 0;

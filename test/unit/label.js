@@ -10,6 +10,7 @@ import GlobeView from 'Core/Prefab/GlobeView';
 import ColorLayer from 'Layer/ColorLayer';
 import FileSource from 'Source/FileSource';
 import Renderer from './bootstrap';
+import { emptySource } from './utils';
 
 import geojson from '../data/geojson/simple.geojson';
 
@@ -19,7 +20,7 @@ describe('LabelLayer', function () {
     let extent;
 
     before('init LabelLayer and a FeatureCollection like', function () {
-        layer = new LabelLayer('labels', { source: false });
+        layer = new LabelLayer('labels', { source: emptySource() });
         layer.source = {};
         layer.style = new Style();
         layer.style.zoom = {

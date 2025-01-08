@@ -3,6 +3,7 @@ import TWEEN from '@tweenjs/tween.js';
 import GeometryLayer from 'Layer/GeometryLayer';
 import { MAIN_LOOP_EVENTS } from 'Core/MainLoop';
 import ObjectRemovalHelper from 'Process/ObjectRemovalHelper';
+import Source from 'Source/Source';
 import TileObjectChart from './charts/TileObjectChart';
 import TileVisibilityChart from './charts/TileVisibilityChart';
 import GeometryDebug from './GeometryDebug';
@@ -156,7 +157,10 @@ export default function createTileDebugUI(datDebugTool, view, layer, debugInstan
 
     class DebugLayer extends GeometryLayer {
         constructor(id, options = {}) {
-            super(id, options.object3d || new THREE.Group(), options);
+            super(id, options.object3d || new THREE.Group(), {
+                ...options,
+                source: new Source({ url: 'none' }),
+            });
             this.update = debugIdUpdate;
             this.isDebugLayer = true;
         }
@@ -171,7 +175,6 @@ export default function createTileDebugUI(datDebugTool, view, layer, debugInstan
     const obbLayer = new DebugLayer(obb_layer_id, {
         visible: false,
         cacheLifeTime: Infinity,
-        source: false,
     });
 
     view.addLayer(obbLayer).then((l) => {
@@ -183,7 +186,6 @@ export default function createTileDebugUI(datDebugTool, view, layer, debugInstan
     const sbLayer = new DebugLayer(sb_layer_id, {
         visible: false,
         cacheLifeTime: Infinity,
-        source: false,
     });
 
     view.addLayer(sbLayer).then((l) => {

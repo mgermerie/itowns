@@ -6,6 +6,7 @@ import convertToTile from 'Converter/convertToTile';
 import ObjectRemovalHelper from 'Process/ObjectRemovalHelper';
 import { ImageryLayers } from 'Layer/Layer';
 import { CACHE_POLICIES } from 'Core/Scheduler/Cache';
+import Source from 'Source/Source';
 
 const subdivisionVector = new THREE.Vector3();
 const boundingSphereCenter = new THREE.Vector3();
@@ -77,7 +78,7 @@ class TiledGeometryLayer extends GeometryLayer {
             ...configGeometryLayer,
             // cacheLifeTime = CACHE_POLICIES.INFINITE because the cache is handled by the builder
             cacheLifeTime: CACHE_POLICIES.INFINITE,
-            source: false,
+            source: new Source({ url: 'none' }),
         });
 
         /**
