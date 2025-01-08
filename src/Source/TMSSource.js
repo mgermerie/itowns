@@ -76,9 +76,10 @@ class TMSSource extends Source {
      * TMSSource and {@link Source}. Only `url` is mandatory.
      */
     constructor(source) {
-        source.format = source.format || 'image/png';
-
-        super(source);
+        super({
+            format: 'image/png',
+            ...source,
+        });
 
         if (!source.crs) {
             throw new Error('New TMSSource/WMTSSource: crs is required');

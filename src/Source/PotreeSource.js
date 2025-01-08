@@ -64,9 +64,11 @@ class PotreeSource extends Source {
             throw new Error('New PotreeSource: file is required');
         }
 
-        super(source);
+        super({
+            ...source,
+            fetcher: Fetcher.arrayBuffer,
+        });
         this.file = source.file;
-        this.fetcher = Fetcher.arrayBuffer;
         this.extensionOctree = 'hrc';
 
         // For cloud specification visit:

@@ -50,7 +50,7 @@ class Atmosphere extends GeometryLayer {
     constructor(id = 'atmosphere', options = {}) {
         super(id, new THREE.Object3D(), {
             ...options,
-            source: new Source({ url: 'none' }),
+            source: new Source({ url: 'none', fetcher: () => {} }),
         });
         this.isAtmosphere = true;
 

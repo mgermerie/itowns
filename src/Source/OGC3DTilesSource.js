@@ -15,7 +15,10 @@ class OGC3DTilesSource extends Source {
      * @param {string} source.url - The URL of the tileset json.
      */
     constructor(source) {
-        super(source);
+        super({
+            fetcher: () => {},
+            ...source,
+        });
         this.isOGC3DTilesSource = true;
     }
 }

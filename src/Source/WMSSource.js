@@ -116,9 +116,10 @@ class WMSSource extends Source {
             throw new Error('source.crs is required');
         }
 
-        source.format = source.format || 'image/png';
-
-        super(source);
+        super({
+            format: 'image/png',
+            ...source,
+        });
 
         this.isWMSSource = true;
         this.name = source.name;

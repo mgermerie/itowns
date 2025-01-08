@@ -152,9 +152,11 @@ class Potree2Source extends Source {
             throw new Error('New Potree2Source: file is required');
         }
 
-        super(source);
+        super({
+            ...source,
+            fetcher: Fetcher.arrayBuffer,
+        });
         this.file = source.file;
-        this.fetcher = Fetcher.arrayBuffer;
 
         this.whenReady = (source.metadata ? Promise.resolve(source.metadata) : Fetcher.json(`${this.url}/${this.file}`, this.networkOptions))
             .then((metadata) => {

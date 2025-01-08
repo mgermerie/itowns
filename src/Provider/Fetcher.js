@@ -206,7 +206,11 @@ export default {
         });
     },
 
-    get(format = '') {
+    get(format) {
+        if (!format) {
+            throw Error('Cannot get a fetcher for undefined format.');
+        }
+
         const [type, subtype] = format.split('/');
         switch (type) {
             case 'application':
@@ -222,18 +226,28 @@ export default {
                         return this.arrayBuffer;
                     case 'isg':
                     case 'gdf':
-                    default:
                         return this.text;
+                    default:
+                        break;
                 }
+                break;
             case 'image':
                 switch (subtype) {
                     case 'x-bil;bits=32':
                         return this.textureFloat;
-                    default:
+                    case 'jpeg':
+                    case 'png':
                         return this.texture;
+                    default:
+                        break;
                 }
+                break;
             default:
-                return this.texture;
+                break;
         }
+
+        throw Error(
+            `The format ${format} is not supported. You need to define a fetcher for it.`,
+        );
     },
 };

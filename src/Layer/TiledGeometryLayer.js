@@ -78,7 +78,7 @@ class TiledGeometryLayer extends GeometryLayer {
             ...configGeometryLayer,
             // cacheLifeTime = CACHE_POLICIES.INFINITE because the cache is handled by the builder
             cacheLifeTime: CACHE_POLICIES.INFINITE,
-            source: new Source({ url: 'none' }),
+            source: new Source({ url: 'none', fetcher: () => {} }),
         });
 
         /**

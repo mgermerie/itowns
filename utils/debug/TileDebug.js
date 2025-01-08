@@ -159,7 +159,7 @@ export default function createTileDebugUI(datDebugTool, view, layer, debugInstan
         constructor(id, options = {}) {
             super(id, options.object3d || new THREE.Group(), {
                 ...options,
-                source: new Source({ url: 'none' }),
+                source: new Source({ url: 'none', fetcher: () => {} }),
             });
             this.update = debugIdUpdate;
             this.isDebugLayer = true;

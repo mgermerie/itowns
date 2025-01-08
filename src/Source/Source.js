@@ -105,12 +105,17 @@ class Source extends InformationsData {
      * Source. Only the `url` property is mandatory.
      */
     constructor(source) {
-        super(source);
-        this.isSource = true;
-
         if (!source.url) {
             throw new Error('New Source: url is required');
         }
+        if (!source.format && !source.fetcher) {
+            throw new Error(
+                'New Source: format or fetcher is required so the Source knows how to fetch data',
+            );
+        }
+
+        super(source);
+        this.isSource = true;
 
         this.uid = uid++;
 

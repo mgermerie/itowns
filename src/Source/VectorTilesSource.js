@@ -57,11 +57,13 @@ class VectorTilesSource extends TMSSource {
      * @param {string} [source.accessToken] - Mapbox access token
      */
     constructor(source) {
-        source.format = 'application/x-protobuf;type=mapbox-vector';
-        source.crs = 'EPSG:3857';
-        source.isInverted = true;
-        source.url = source.url || '.';
-        super(source);
+        super({
+            url: '.',
+            ...source,
+            format: 'application/x-protobuf;type=mapbox-vector',
+            crs: 'EPSG:3857',
+            isInverted: true,
+        });
         const ffilter = source.filter || (() => true);
         this.urls = [];
         this.layers = {};

@@ -17,7 +17,10 @@ class OrientedImageSource extends Source {
      * to find the good texture for each camera for each panoramic.
      */
     constructor(source) {
-        super(source);
+        super({
+            format: 'image/jpeg',
+            ...source,
+        });
         this.isOrientedImageSource = true;
 
         // Fetch the two files

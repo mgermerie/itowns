@@ -34,6 +34,7 @@ describe('updateLayeredMaterialNodeImagery', function () {
         url: 'http://',
         crs: 'EPSG:4326',
         extent,
+        fetcher: () => {},
     });
 
     const layer = new Layer('foo', {

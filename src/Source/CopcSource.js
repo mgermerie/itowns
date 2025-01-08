@@ -82,12 +82,13 @@ class CopcSource extends Source {
      * @param {Object} [config.attribution] - Attribution of the data.
      */
     constructor(config) {
-        super(config);
+        super({
+            ...config,
+            fetcher: LASParser.parseChunk,
+            parser: Fetcher.arrayBuffer,
+        });
 
         this.isCopcSource = true;
-
-        this.parser = LASParser.parseChunk;
-        this.fetcher = Fetcher.arrayBuffer;
 
         this.colorDepth = config.colorDepth ?? 16;
 

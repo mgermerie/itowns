@@ -9,7 +9,10 @@ import { WebGLRenderer } from 'three';
 
 
 describe('OGC3DTilesLayer', function () {
-    const source =  new OGC3DTilesSource({ url: 'https://mock.com/tileset.json' });
+    const source =  new OGC3DTilesSource({
+        url: 'https://mock.com/tileset.json',
+        fetcher: () => {},
+    });
 
     it('should create 3D Tiles layer', function () {
         // Should create layer from basic source

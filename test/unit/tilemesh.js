@@ -160,18 +160,15 @@ describe('TileMesh', function () {
     });
 
     it('throw error if there\'s not extent in constructor', () => {
-        assert.doesNotThrow(() => {
-            // eslint-disable-next-line no-unused-vars
-            const tileMesh = new TileMesh(geom, new THREE.Material(), planarlayer, tile.toExtent('EPSG:3857'), 0);
-        });
-        assert.throws(() => {
-            // eslint-disable-next-line no-unused-vars
-            const tileMesh = new TileMesh(geom, new THREE.Material(), planarlayer);
-        });
+        assert.doesNotThrow(() =>
+            new TileMesh(geom, new THREE.Material(), planarlayer, tile.toExtent('EPSG:3857'), 0),
+        );
+        assert.throws(() => new TileMesh(geom, new THREE.Material(), planarlayer));
     });
 
-    // eslint-disable-next-line no-unused-vars
-    const elevationLayer = new ElevationLayer('elevation', { crs: 'EPSG:3857', source: new Source({ url: 'node' }) });
+    const elevationLayer = new ElevationLayer('elevation', {
+        crs: 'EPSG:3857',
+        source: new Source({ url: 'node', fetcher: () => {} }) });
     elevationLayer.parent = planarlayer;
 
     const material = new THREE.Material();

@@ -66,7 +66,7 @@ export default function create3dTilesDebugUI(datDebugTool, view, _3dTileslayer) 
     const boundingVolumeLayer = new GeometryLayer(boundingVolumeID, new THREE.Object3D(), {
         visible: false,
         cacheLifeTime: Infinity,
-        source: new Source({ url: 'none' }),
+        source: new Source({ url: 'none', fetcher: () => {} }),
     });
     boundingVolumeLayer.update = debugIdUpdate;
 

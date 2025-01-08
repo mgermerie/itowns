@@ -36,6 +36,7 @@ describe('Handling no data source error', function () {
         url: 'http://',
         crs: 'EPSG:4326',
         extent,
+        fetcher: () => {},
     });
     source.zoom = { max: 20, min: 0 };
 
