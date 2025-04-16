@@ -71,6 +71,9 @@ class COGSource extends itowns.Source {
                 this.extent = new itowns.Extent(this.crs, minX, maxX, minY, maxY);
                 this.dimensions = this.extent.planarDimensions();
 
+                console.log(this.origin);
+                console.log(this.extent);
+
                 this.levels = [];
                 this.levels.push(this.makeLevel(this.firstImage, this.firstImage.getResolution()));
 
