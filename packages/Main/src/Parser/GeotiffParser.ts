@@ -148,6 +148,10 @@ class GeotiffNode {
             dataType = selectDataType(image.getSampleFormat(), image.getBitsPerSample()),
         } = config;
 
+        console.log(origin);
+        console.log(resolution);
+        console.log('');
+
         this.image = image;
         this.resolution = resolution;
         this.origin = origin;
