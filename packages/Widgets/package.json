@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@itowns/widgets",
+  "name": "@itowns-test-node/widgets",
   "version": "2.46.0",
   "description": "Widgets",
   "type": "module",
