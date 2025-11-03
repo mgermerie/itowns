@@ -106,7 +106,7 @@ jobs:
         run: npm run transpile
 
       - name: Test ${{ matrix.package }}
-        run: npm run test-with-coverage_lcov --workspace ${{ matrix.package}}
+        run: npm run test-with-coverage_lcov --workspace packages/${{ matrix.path }}
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@v2
         with:
