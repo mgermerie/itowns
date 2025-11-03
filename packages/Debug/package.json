@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@itowns/debug",
+  "name": "@itowns-test-node/debug",
   "version": "2.46.0",
   "type": "module",
   "main": "lib/Main.js",

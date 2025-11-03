@@ -1,5 +1,5 @@
 {
-  "name": "@itowns/geographic",
+  "name": "@itowns-test-node/geographic",
   "version": "2.46.0",
   "description": "Geodesy",
   "type": "module",

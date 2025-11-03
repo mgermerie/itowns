@@ -256,10 +256,10 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          external_repository: iTowns/itowns.github.io
+          external_repository: mgermerie/itowns.github.io
           publish_dir: ./itowns
           destination_dir: ./itowns
-          publish_branch: master
+          publish_branch: test
           enable_jekyll: true
 
       # Deploy to itowns.github.io Dev
@@ -271,10 +271,10 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          external_repository: iTowns/itowns.github.io
+          external_repository: mgermeri/itowns.github.io
           publish_dir: ./itowns
           destination_dir: ./itowns/dev
-          publish_branch: master
+          publish_branch: test
           enable_jekyll: true
 
 
