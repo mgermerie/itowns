@@ -1,6 +1,6 @@
 import Source from 'Source/Source';
 import URLBuilder from 'Provider/URLBuilder';
-import { Extent, CRS } from '@itowns/geographic';
+import { Extent, CRS } from '@test-itowns-npm-token/geographic';
 
 const _extent = new Extent('EPSG:4326');
 

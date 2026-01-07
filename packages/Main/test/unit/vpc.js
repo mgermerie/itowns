@@ -1,7 +1,7 @@
 import assert from 'assert';
 import View from 'Core/View';
 import GlobeView from 'Core/Prefab/GlobeView';
-import { Coordinates, CRS } from '@itowns/geographic';
+import { Coordinates, CRS } from '@test-itowns-npm-token/geographic';
 import VpcSource from 'Source/VpcSource';
 import VpcLayer from 'Layer/VpcLayer';
 import sinon from 'sinon';

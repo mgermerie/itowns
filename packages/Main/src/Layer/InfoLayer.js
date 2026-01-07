@@ -1,4 +1,4 @@
-import { Extent } from '@itowns/geographic';
+import { Extent } from '@test-itowns-npm-token/geographic';
 
 export default class InfoLayer {
     constructor(layer) {

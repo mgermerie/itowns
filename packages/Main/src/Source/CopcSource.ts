@@ -1,5 +1,5 @@
 import { Binary, Info, Las } from 'copc';
-import { CRS } from '@itowns/geographic';
+import { CRS } from '@test-itowns-npm-token/geographic';
 import Fetcher from 'Provider/Fetcher';
 import LASParser from 'Parser/LASParser';
 import Source from 'Source/Source';

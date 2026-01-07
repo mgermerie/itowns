@@ -1,7 +1,7 @@
 import assert from 'assert';
 import CogParser from 'Parser/CogParser';
 import CogSource from 'Source/CogSource';
-import { CRS, Extent } from '@itowns/geographic';
+import { CRS, Extent } from '@test-itowns-npm-token/geographic';
 
 import {
     UnsignedByteType,

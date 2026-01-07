@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import View, { VIEW_EVENTS } from 'Core/View';
 import GlobeControls from 'Controls/GlobeControls';
-import { Coordinates, ellipsoidSizes } from '@itowns/geographic';
+import { Coordinates, ellipsoidSizes } from '@test-itowns-npm-token/geographic';
 import GlobeLayer from 'Core/Prefab/Globe/GlobeLayer';
 import CameraUtils from 'Utils/CameraUtils';
 import WebXR from 'Renderer/WebXR';

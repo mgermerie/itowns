@@ -1,4 +1,4 @@
-import { Coordinates } from '@itowns/geographic';
+import { Coordinates } from '@test-itowns-npm-token/geographic';
 import assert from 'assert';
 import Potree2BinParser from 'Parser/Potree2BinParser';
 import * as THREE from 'three';

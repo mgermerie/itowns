@@ -54,7 +54,7 @@ module.exports = () => {
             },
             alias: {
                 itowns: path.resolve(__dirname, 'packages/Main/src/Main.js'),
-                '@itowns/geographic': path.resolve(__dirname, 'packages/Geographic/src/index.ts'),
+                '@test-itowns-npm-token/geographic': path.resolve(__dirname, 'packages/Geographic/src/index.ts'),
             },
         },
         entry: {

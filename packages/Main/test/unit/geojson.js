@@ -1,6 +1,6 @@
 import assert from 'assert';
 import GeoJsonParser from 'Parser/GeoJsonParser';
-import { Extent, CRS } from '@itowns/geographic';
+import { Extent, CRS } from '@test-itowns-npm-token/geographic';
 
 import holes from '../data/geojson/holes.geojson';
 import gpx from '../data/geojson/gpx.geojson';

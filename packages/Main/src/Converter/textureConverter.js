@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import Feature2Texture from 'Converter/Feature2Texture';
-import { Extent } from '@itowns/geographic';
+import { Extent } from '@test-itowns-npm-token/geographic';
 
 const extentTexture = new Extent('EPSG:4326');
 

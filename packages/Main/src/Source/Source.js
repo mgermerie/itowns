@@ -1,4 +1,4 @@
-import { Extent, CRS } from '@itowns/geographic';
+import { Extent, CRS } from '@test-itowns-npm-token/geographic';
 import GeoJsonParser from 'Parser/GeoJsonParser';
 import KMLParser from 'Parser/KMLParser';
 import GeotiffParser from 'Parser/GeotiffParser';
