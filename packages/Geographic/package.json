@@ -1,6 +1,6 @@
 {
   "name": "@test-itowns-npm-token/geographic",
-  "version": "2.46.0",
+  "version": "2.47.0",
   "description": "Geodesy",
   "type": "module",
   "main": "lib/index.js",
