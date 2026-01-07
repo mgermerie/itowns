@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@itowns/debug",
+  "name": "@test-itowns-npm-token/debug",
   "version": "2.46.0",
   "type": "module",
   "main": "lib/Main.js",
@@ -11,7 +11,7 @@
     "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
     "transpile": "cross-env BABEL_DISABLE_CACHE=1 babel src --out-dir lib --extensions .js,.ts",
     "watch": "npm run transpile -- --watch",
-    "version": "cross-env-shell npm install @itowns/geographic@$npm_package_version itowns@$npm_package_version"
+    "version": "cross-env-shell npm install @test-itowns-npm-token/geographic@$npm_package_version test-itowns-npm-token@$npm_package_version"
   },
   "files": [
     "*.md",
@@ -28,10 +28,10 @@
   },
   "homepage": "https://itowns.github.io/",
   "dependencies": {
-    "@itowns/geographic": "^2.46.0",
+    "@test-itowns-npm-token/geographic": "^2.46.0",
     "@tweenjs/tween.js": "^25.0.0",
     "chart.js": "^4.4.8",
     "dat.gui": "^0.7.9",
-    "itowns": "^2.46.0"
+    "test-itowns-npm-token": "^2.46.0"
   }
 }
