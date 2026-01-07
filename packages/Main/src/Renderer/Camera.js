@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Coordinates } from '@itowns/geographic';
+import { Coordinates } from '@test-itowns-npm-token/geographic';
 import DEMUtils from 'Utils/DEMUtils';
 
 /**

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Extent, Coordinates } from '@itowns/geographic';
+import { Extent, Coordinates } from '@test-itowns-npm-token/geographic';
 import StyleOptions from 'Core/StyleOptions';
 
 function defaultExtent(crs) {

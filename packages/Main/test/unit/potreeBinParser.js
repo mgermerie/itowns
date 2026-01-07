@@ -1,6 +1,6 @@
 import assert from 'assert';
 import PotreeBinParser from 'Parser/PotreeBinParser';
-import { Coordinates } from '@itowns/geographic';
+import { Coordinates } from '@test-itowns-npm-token/geographic';
 import * as THREE from 'three';
 
 describe('PotreeBinParser', function () {

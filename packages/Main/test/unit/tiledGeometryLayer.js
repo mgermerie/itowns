@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Extent, Coordinates } from '@itowns/geographic';
+import { Extent, Coordinates } from '@test-itowns-npm-token/geographic';
 import PlanarView from 'Core/Prefab/PlanarView';
 import { CAMERA_TYPE } from 'Renderer/Camera';
 import GlobeView from 'Core/Prefab/GlobeView';

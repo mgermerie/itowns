@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import DEMUtils from 'Utils/DEMUtils';
-import { Coordinates } from '@itowns/geographic';
+import { Coordinates } from '@test-itowns-npm-token/geographic';
 
 const coord = new Coordinates('EPSG:4326');
 let rect;

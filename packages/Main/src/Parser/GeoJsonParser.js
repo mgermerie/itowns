@@ -1,4 +1,4 @@
-import { Coordinates } from '@itowns/geographic';
+import { Coordinates } from '@test-itowns-npm-token/geographic';
 import { FeatureCollection, FEATURE_TYPES } from 'Core/Feature';
 import { deprecatedParsingOptionsToNewOne } from 'Core/Deprecated/Undeprecator';
 

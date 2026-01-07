@@ -1,4 +1,4 @@
-import { CRS } from '@itowns/geographic';
+import { CRS } from '@test-itowns-npm-token/geographic';
 import LASParser from 'Parser/LASParser';
 import PotreeBinParser from 'Parser/PotreeBinParser';
 import Fetcher from 'Provider/Fetcher';

@@ -5,7 +5,7 @@ import { newTileGeometry, TileBuilder, TileBuilderParams } from 'Core/Prefab/Til
 import ReferLayerProperties from 'Layer/ReferencingLayerProperties';
 import { geoidLayerIsVisible } from 'Layer/GeoidLayer';
 
-import type { Extent } from '@itowns/geographic';
+import type { Extent } from '@test-itowns-npm-token/geographic';
 import type { LayeredMaterialParameters } from 'Renderer/LayeredMaterial';
 
 const dimensions = new THREE.Vector2();

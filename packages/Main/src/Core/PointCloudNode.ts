@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import OBB from 'Renderer/OBB';
 import proj4 from 'proj4';
-import { OrientationUtils, Coordinates } from '@itowns/geographic';
+import { OrientationUtils, Coordinates } from '@test-itowns-npm-token/geographic';
 
 export interface PointCloudSource {
     spacing: number;

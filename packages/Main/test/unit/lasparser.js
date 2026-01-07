@@ -4,7 +4,7 @@ import LASParser from 'Parser/LASParser';
 import Fetcher from 'Provider/Fetcher';
 import * as THREE from 'three';
 import proj4 from 'proj4';
-import { OrientationUtils, Coordinates } from '@itowns/geographic';
+import { OrientationUtils, Coordinates } from '@test-itowns-npm-token/geographic';
 import { compareWithEpsilon } from './utils';
 
 

@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { TileGeometry } from 'Core/TileGeometry';
 import { GlobeTileBuilder } from 'Core/Prefab/Globe/GlobeTileBuilder';
-import { CRS, Coordinates } from '@itowns/geographic';
+import { CRS, Coordinates } from '@test-itowns-npm-token/geographic';
 
-import type { Extent } from '@itowns/geographic';
+import type { Extent } from '@test-itowns-npm-token/geographic';
 
 // get oriented bounding box of tile
 const builder = new GlobeTileBuilder({ uvCount: 1 });

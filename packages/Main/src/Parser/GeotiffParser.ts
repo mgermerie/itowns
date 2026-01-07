@@ -16,7 +16,7 @@ import {
 import { TEXTURE_TILE_DIM } from 'Provider/Fetcher';
 
 import type { TextureDataType } from 'three';
-import type { Extent } from '@itowns/geographic';
+import type { Extent } from '@test-itowns-npm-token/geographic';
 import type {
     TypedArrayWithDimensions,
     Pool,

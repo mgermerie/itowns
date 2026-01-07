@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { geoidLayerIsVisible } from 'Layer/GeoidLayer';
 import { tiledCovering } from 'Core/Tile/Tile';
 
-import type { Extent } from '@itowns/geographic';
+import type { Extent } from '@test-itowns-npm-token/geographic';
 import type { TileGeometry } from 'Core/TileGeometry';
 import type Tile from 'Core/Tile/Tile';
 import OBB from 'Renderer/OBB';

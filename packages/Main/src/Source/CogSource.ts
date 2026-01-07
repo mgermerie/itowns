@@ -1,5 +1,5 @@
 import * as GeoTIFF from 'geotiff';
-import { Extent } from '@itowns/geographic';
+import { Extent } from '@test-itowns-npm-token/geographic';
 
 import { selectDataType, GeotiffNode } from 'Parser/GeotiffParser';
 import COGParser from 'Parser/CogParser';

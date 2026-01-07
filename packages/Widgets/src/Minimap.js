@@ -1,4 +1,4 @@
-import { Coordinates } from '@itowns/geographic';
+import { Coordinates } from '@test-itowns-npm-token/geographic';
 import { MAIN_LOOP_EVENTS, PlanarView, CAMERA_TYPE } from 'itowns';
 import Widget from './Widget';
 

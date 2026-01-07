@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Extent } from '@itowns/geographic';
+import { Extent } from '@test-itowns-npm-token/geographic';
 import PlanarView from 'Core/Prefab/PlanarView';
 import Renderer from './bootstrap';
 

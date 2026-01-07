@@ -1,4 +1,4 @@
-import { Coordinates } from '@itowns/geographic';
+import { Coordinates } from '@test-itowns-npm-token/geographic';
 import { LRUCache } from 'lru-cache';
 import Fetcher from 'Provider/Fetcher';
 import { Color } from 'three';

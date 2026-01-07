@@ -1,6 +1,6 @@
 import assert from 'assert';
 import WMSSource from 'Source/WMSSource';
-import { Extent } from '@itowns/geographic';
+import { Extent } from '@test-itowns-npm-token/geographic';
 
 describe('WMSSource', function () {
     const paramsWMS = {
