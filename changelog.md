@@ -1,3 +1,116 @@
+<a name="2.47.0"></a>
+# [2.47.0](https://github.com/mgermerie/itowns/compare/v2.46.0...v2.47.0) (2026-01-08)
+
+
+### Features
+
+* Add support for Cloud Optimized Geotiff ([4933b31](https://github.com/mgermerie/itowns/commit/4933b31))
+* Add support for Geotiff ([a0b18a8](https://github.com/mgermerie/itowns/commit/a0b18a8))
+* allow assigning a funcion to a style property after its declaration ([01be54d](https://github.com/mgermerie/itowns/commit/01be54d))
+* **camera:** calculate dynamic, optimized camera near/far and fog ([56b722b](https://github.com/mgermerie/itowns/commit/56b722b))
+* **deps:** bump proj4 from 2.9.3 to 2.9.10 ([16cf342](https://github.com/mgermerie/itowns/commit/16cf342))
+* **geographic:** let user import single modules ([f160270](https://github.com/mgermerie/itowns/commit/f160270))
+* **PointCloudNode:** generate bbox in a referentiel local (view Crs tranformed to z normal) ([77163e3](https://github.com/mgermerie/itowns/commit/77163e3))
+* **rendering:** implement physically acurate sky, atmosphere and lighting ([66a44d4](https://github.com/mgermerie/itowns/commit/66a44d4))
+* **Vpc:** add VpcSource/Layer as COPC or EPT MultiSource/Layer ([ebbdfa0](https://github.com/mgermerie/itowns/commit/ebbdfa0))
+
+
+### Bug Fixes
+
+* **camera:** don't add default fog in views where camera has static near/far ([a969ced](https://github.com/mgermerie/itowns/commit/a969ced))
+* **ci:** fix missing env variable for release ([e548cf0](https://github.com/mgermerie/itowns/commit/e548cf0))
+* **Cog-Geotiff:** Fix tile raster dimensions ([3fedcae](https://github.com/mgermerie/itowns/commit/3fedcae))
+* **Crs:** add 'ft' as possible unit ([01dedb6](https://github.com/mgermerie/itowns/commit/01dedb6))
+* **doc:** remove typescript doc for COG/Geotiff ([8bc6ed3](https://github.com/mgermerie/itowns/commit/8bc6ed3))
+* **docs:** exclude sub-folder node_modules to fix doc build ([315518e](https://github.com/mgermerie/itowns/commit/315518e))
+* **ElevationLayer:** don't assume Layer's Source has a TMS-like structure ([502c20b](https://github.com/mgermerie/itowns/commit/502c20b))
+* **entwine:** load node Octree if we don't have children yet ([9bc62e0](https://github.com/mgermerie/itowns/commit/9bc62e0))
+* **example:** fix copc_simple_loader example ([adc7d7b](https://github.com/mgermerie/itowns/commit/adc7d7b))
+* fix wrong install path for dependencies ([c6f5964](https://github.com/mgermerie/itowns/commit/c6f5964))
+* **OrientationUtils:** add UTM support ([b5b6e9a](https://github.com/mgermerie/itowns/commit/b5b6e9a))
+* **PlanarView:** Add option in planarView to prevent dynamic near/far calculation ([2c83b28](https://github.com/mgermerie/itowns/commit/2c83b28))
+* **PointCloudLayer:** move debug functions to Debug/PointCloudDebug ([43eaeaf](https://github.com/mgermerie/itowns/commit/43eaeaf))
+* **PointCloudNode:** fix mode in material ([d8ee5fb](https://github.com/mgermerie/itowns/commit/d8ee5fb))
+* **pointcloud:** prevent query on missing Potree2 hierarchy ([8667d35](https://github.com/mgermerie/itowns/commit/8667d35))
+* **PointVS:** fix for pointCloud elevation display ([4d52ac8](https://github.com/mgermerie/itowns/commit/4d52ac8))
+* **Potree2:** add reprojection in Potree2BrotliLoader ([cdd2013](https://github.com/mgermerie/itowns/commit/cdd2013))
+* **Potree2BinParser:** fix error in pointAttributes property ([9b24c35](https://github.com/mgermerie/itowns/commit/9b24c35))
+* **renderer:** restore renderer/VR state after texture rendering ([7277c52](https://github.com/mgermerie/itowns/commit/7277c52))
+* **test:** add test for CRS.defsFromWkt() ([86bbbbb](https://github.com/mgermerie/itowns/commit/86bbbbb))
+* **test:** vpc test time out ([6646776](https://github.com/mgermerie/itowns/commit/6646776))
+* **TileBuilder:** resolve computeExtraOffset type pain ([05d9e5f](https://github.com/mgermerie/itowns/commit/05d9e5f))
+* **TileLayer:** fix material opacity ([71fa255](https://github.com/mgermerie/itowns/commit/71fa255))
+* **VPC:** reprojection for VPC layer ([e05324e](https://github.com/mgermerie/itowns/commit/e05324e))
+
+
+### Examples
+
+* add copc_3d_loader to example menu ([628f03e](https://github.com/mgermerie/itowns/commit/628f03e))
+* **PointCloudLayer:** add copc_3D_loader example and new dataset ([618d989](https://github.com/mgermerie/itowns/commit/618d989))
+* **Potree:** remove the extra '/' in url ([c0118ec](https://github.com/mgermerie/itowns/commit/c0118ec))
+* **vpc:** add 3d loader ([a14d2cd](https://github.com/mgermerie/itowns/commit/a14d2cd))
+
+
+### Code Refactoring
+
+* **geographic:** don't use three default import ([be2ec44](https://github.com/mgermerie/itowns/commit/be2ec44))
+* **LASParser:** reproj data during parsing ([43290af](https://github.com/mgermerie/itowns/commit/43290af))
+* migrate OBB to typescript ([7aaf134](https://github.com/mgermerie/itowns/commit/7aaf134))
+* migrate TileMesh to typescript ([31a364f](https://github.com/mgermerie/itowns/commit/31a364f))
+* **PointCloud:** factorize load method ([90b3f01](https://github.com/mgermerie/itowns/commit/90b3f01))
+* **PointCloudNode:** move depth to Parent Class ([97165e2](https://github.com/mgermerie/itowns/commit/97165e2))
+* **PointCloudNode:** remove reference to layer in Node (use source directly) ([662f273](https://github.com/mgermerie/itowns/commit/662f273))
+* **PotreeNodes:** add index as property of the node ([ac15109](https://github.com/mgermerie/itowns/commit/ac15109))
+* **PtCloudProvider:** supp position and rotation in userData ([5b4705f](https://github.com/mgermerie/itowns/commit/5b4705f))
+* rewrite code checking extrusion height was set, defining setter/getter separately ([6a6ee3b](https://github.com/mgermerie/itowns/commit/6a6ee3b))
+
+
+### Workflow and chores
+
+* **Cog-Geotiff:** rewrite relative imports ([67832d6](https://github.com/mgermerie/itowns/commit/67832d6))
+* **contributors:** addition of myself as long overdue ([bbda503](https://github.com/mgermerie/itowns/commit/bbda503))
+* **deps-dev:** bump js-yaml from 4.1.0 to 4.1.1 ([4e7d0cf](https://github.com/mgermerie/itowns/commit/4e7d0cf))
+* **deps-dev:** bump node-forge from 1.3.1 to 1.3.3 ([5b1abcf](https://github.com/mgermerie/itowns/commit/5b1abcf))
+* fix imports ([d31f1d2](https://github.com/mgermerie/itowns/commit/d31f1d2))
+* **geographic:** mark module-levels function as pure ([872baed](https://github.com/mgermerie/itowns/commit/872baed))
+* **integration:** update job names to match Node version ([00e8ead](https://github.com/mgermerie/itowns/commit/00e8ead))
+* migrate convertToTile to typescript ([c6e9175](https://github.com/mgermerie/itowns/commit/c6e9175))
+* **node:** update to node 24 ([d01b83f](https://github.com/mgermerie/itowns/commit/d01b83f))
+* **pointcloud:** factorize entwine/copc nodes ([2f351a5](https://github.com/mgermerie/itowns/commit/2f351a5))
+* **pointcloud:** factorize potree/potree2 nodes ([1568c0b](https://github.com/mgermerie/itowns/commit/1568c0b))
+* **pointcloud:** migrate layers to typescript ([ef8be5e](https://github.com/mgermerie/itowns/commit/ef8be5e))
+* **pointcloud:** migrate nodes to typescript ([0165c09](https://github.com/mgermerie/itowns/commit/0165c09))
+* **pointcloud:** migrate pointcloud sources to typescript ([39e0b27](https://github.com/mgermerie/itowns/commit/39e0b27))
+* test personal deploy ([7102e3b](https://github.com/mgermerie/itowns/commit/7102e3b))
+* **TileMesh:** remove dynamically added zoom property ([30c7728](https://github.com/mgermerie/itowns/commit/30c7728))
+* update caniuse-lite ([e9c0786](https://github.com/mgermerie/itowns/commit/e9c0786))
+* update to three v182 ([bbd11b5](https://github.com/mgermerie/itowns/commit/bbd11b5))
+
+
+### Documentation
+
+* **ColorLayer:** rewrote ambiguous documentation ([fd85969](https://github.com/mgermerie/itowns/commit/fd85969))
+* **LayerUpdateState:** update and refine documentation ([33d8dc7](https://github.com/mgermerie/itowns/commit/33d8dc7))
+* **OBB:** update and refine documentation ([6bc71c9](https://github.com/mgermerie/itowns/commit/6bc71c9))
+* **TileMesh:** update and refine documentation ([0e90f3e](https://github.com/mgermerie/itowns/commit/0e90f3e))
+
+
+### Tests
+
+* **EptNode:** unit tests on LoadOctree ([3331469](https://github.com/mgermerie/itowns/commit/3331469))
+* **functional:** modif in hook for better message ([0be9910](https://github.com/mgermerie/itowns/commit/0be9910))
+* **PointCloud:** improve unit tests (copc and ept) ([209cb76](https://github.com/mgermerie/itowns/commit/209cb76))
+* **PointCloud:** update linked to reprojection ([3c1ccb3](https://github.com/mgermerie/itowns/commit/3c1ccb3))
+* **Potree:** unit test ([3c93bbe](https://github.com/mgermerie/itowns/commit/3c93bbe))
+* **vpc:** add unit tests ([8de95be](https://github.com/mgermerie/itowns/commit/8de95be))
+
+
+### Others
+
+* fixup ([b55c8e1](https://github.com/mgermerie/itowns/commit/b55c8e1))
+
+
+
 <a name="2.46.0"></a>
 # [2.46.0](https://github.com/iTowns/itowns/compare/v2.45.1...v2.46.0) (2025-10-03)
 
