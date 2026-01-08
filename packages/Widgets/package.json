@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@test-itowns-npm-token/widgets",
-  "version": "2.46.0",
+  "version": "2.47.0",
   "description": "Widgets",
   "type": "module",
   "main": "lib/Main.js",
@@ -31,7 +31,7 @@
   },
   "homepage": "https://itowns.github.io/",
   "dependencies": {
-    "@test-itowns-npm-token/geographic": "^2.46.0",
-    "test-itowns-npm-token": "^2.46.0"
+    "@test-itowns-npm-token/geographic": "^2.47.0",
+    "test-itowns-npm-token": "^2.47.0"
   }
 }
