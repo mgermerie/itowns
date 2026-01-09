@@ -43,8 +43,8 @@ jobs:
       - name: publish itowns@latest npm package
         if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
         run: npm run publish-latest
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: publish itowns@next npm package (following a release)
         if: ${{ startsWith(github.event.head_commit.message, 'release v' ) }}
@@ -55,8 +55,8 @@ jobs:
           git add .
           git commit --amend --no-edit
           git push -f
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: publish itowns@next npm package
         if: ${{ !startsWith(github.event.head_commit.message, 'release v' ) }}
@@ -67,6 +67,6 @@ jobs:
           git add .
           git commit --amend --no-edit
           git push
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
