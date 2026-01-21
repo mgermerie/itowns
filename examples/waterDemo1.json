@@ -1,0 +1,19 @@
+{
+    "coordinates": {
+        "lon": 7.264944,
+        "lat": 43.695706,
+        "alt": 2.0
+    },
+    "dimensions": {
+        "x": 100000,
+        "y": 100000,
+        "z": 50
+    },
+    "color": "#19243b",
+    "opacity": 1,
+    "controller": {
+        "step": 1,
+        "min": 0,
+        "max": 500
+    }
+}
