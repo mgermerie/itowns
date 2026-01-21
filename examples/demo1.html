@@ -1,0 +1,54 @@
+<html>
+    <head>
+
+        <title>Demo 1</title>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" type="text/css" href="css/example.css">
+        <link rel="stylesheet" type="text/css" href="css/LoadingScreen.css">
+
+        <style>
+            #altitudeControl {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                z-index: 1;
+
+                background-color: white;
+            }
+        </style>
+
+        <script type="importmap">
+        {
+            "imports": {
+                "itowns": "/dist/itowns.js",
+                "debug": "/dist/debug.js",
+                "dat": "https://unpkg.com/dat.gui@0.7.9/build/dat.gui.module.js",
+                "GuiTools": "/examples/jsm/GUI/GuiTools.js",
+                "LoadingScreen": "/examples/jsm/GUI/LoadingScreen.js",
+                "itowns_widgets": "/dist/itowns_widgets.js",
+                "three": "https://unpkg.com/three@0.182.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.182.0/examples/jsm/"
+            }
+        }
+        </script>
+
+    </head>
+
+    <body>
+
+        <div id="viewerDiv"></div>
+
+        <div id="altitudeControl">
+            <label>Altitude (m):
+                <input type="range" id="altitudeSlider" min="0" max="200" value="0" step="1">
+                <span id="altitudeValue">0</span> m
+            </label>
+        </div>
+
+        <script type="module" src="jsm/demo1.js"></script>
+
+    </body>
+</html>
